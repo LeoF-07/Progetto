@@ -1,6 +1,8 @@
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.Year;
+import java.util.ArrayList;
 
 public class Connessione extends Thread {
 
@@ -9,12 +11,14 @@ public class Connessione extends Thread {
     private BufferedReader in = null;
     private PrintWriter out = null;
 
-    private final String PATH = "./Progetto/Mappa-dei-monumenti-in-Italia.csv";
+    private final String PATH = ".\\Mappa-dei-monumenti-in-Italia.csv";
     private File file;
+    private ArrayList<Monumento> monumenti;
 
     public Connessione(Socket clientSocket){
         this.clientSocket = clientSocket;
         this.file = creaFile(PATH);
+        this.monumenti = prelevaDati();
     }
 
     @Override
@@ -61,6 +65,27 @@ public class Connessione extends Thread {
 
         System.out.println("EchoServer: closing...");
         chiudi();
+    }
+
+    public ArrayList<Monumento> prelevaDati(){
+        ArrayList<Monumento> monumenti = new ArrayList<>();
+
+        try {
+            FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            bufferedReader.readLine();
+            while (bufferedReader.ready()){
+                String[] informazioni = bufferedReader.readLine().split(";");
+                Monumento monumento = new Monumento(informazioni[0], informazioni[1], informazioni[2], informazioni[3],
+                                                    informazioni[4], Year.parse(informazioni[5]), LocalDateTime.parse(informazioni[6]),
+                                                    informazioni[7], Double.parseDouble(informazioni[8]), Double.parseDouble(informazioni[9]));
+                monumenti.add(monumento);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return monumenti;
     }
 
     private File creaFile(String path){
