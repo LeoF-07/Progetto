@@ -32,13 +32,41 @@ public class Connessione extends Thread {
 
             out = new PrintWriter(bw, true);
 
-            out.print("Hello (END to end connection): ");
+            out.println("Hello (END to end connection)");
             out.flush();
 
             esegui();
         } catch (IOException e) {
             System.err.println("Accept failed");
             System.exit(1);
+        }
+    }
+
+    private void esegui(){
+        String comando;
+
+        do {
+            try {
+                comando = in.readLine();
+                System.out.println(comando);
+
+                eseguiComando(comando);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } while(!comando.equals("END"));
+
+        System.out.println("Server: closing...");
+        chiudi();
+        System.out.println("Server: closed");
+    }
+
+    public void eseguiComando(String comando){
+        if(comando.startsWith(Comando.GET_ROW.nome)) {
+            int riga = Integer.parseInt(comando.substring(Comando.GET_ROW.lunghezzaComando + 1));
+            System.out.println(riga);
+            out.println(monumenti.get(riga));
+            out.flush();
         }
     }
 
@@ -50,29 +78,6 @@ public class Connessione extends Thread {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void esegui(){
-        String comando;
-
-        do {
-            try {
-                comando = in.readLine();
-                System.out.println(comando);
-                if(comando.startsWith("GET_ROW")) {
-                    int riga = Integer.parseInt(comando.substring(8));
-                    System.out.println(riga);
-                    out.println(monumenti.get(riga));
-                }
-                //out.println(monumenti.get(Integer.parseInt(comando)));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } while(!comando.equals("END"));
-
-        System.out.println("Server: closing...");
-        chiudi();
-        System.out.println("Server: closed");
     }
 
     public ArrayList<Monumento> prelevaDati(){

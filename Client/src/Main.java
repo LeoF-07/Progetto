@@ -3,6 +3,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+import org.json.JSONObject;
 
 public class Main {
     final static String nomeServer = "localhost";
@@ -27,15 +28,24 @@ public class Main {
 
         Scanner s = new Scanner(System.in, StandardCharsets.UTF_8);
 
-        while(true) {
-            System.out.print("Frase: ");
+        String comando;
+        do {
+            System.out.print("Comando: ");
+            comando = s.nextLine();
 
-            String frase = s.nextLine();
-            System.out.format("Invio al server: %s%n", frase);
-            out.println(frase);
+            JSONObject jsonComando = new JSONObject();
+            jsonComando.put("comando", comando);
+            System.out.println(jsonComando);
+
+            // Potrei leggere dal comando fino alla fine della stringa, poi faccio uno split della virgola e ottento i due parametri, che possono essere solo 1
+
+            System.out.format("Invio al server: %s%n", comando);
+
+            out.println(comando);
+            System.out.println(in.readLine());
             System.out.println("In attesa di risposta dal server...");
             String risposta = in.readLine();
             System.out.format("Risposta dal server: %s%n", risposta);
-        }
+        } while(!comando.equals("END"));
     }
 }
