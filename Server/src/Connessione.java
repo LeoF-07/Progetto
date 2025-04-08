@@ -58,13 +58,21 @@ public class Connessione extends Thread {
         do {
             try {
                 comando = in.readLine();
+                System.out.println(comando);
+                if(comando.startsWith("GET_ROW")) {
+                    int riga = Integer.parseInt(comando.substring(8));
+                    System.out.println(riga);
+                    out.println(monumenti.get(riga));
+                }
+                //out.println(monumenti.get(Integer.parseInt(comando)));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } while(!comando.equals("END"));
 
-        System.out.println("EchoServer: closing...");
+        System.out.println("Server: closing...");
         chiudi();
+        System.out.println("Server: closed");
     }
 
     public ArrayList<Monumento> prelevaDati(){
@@ -77,7 +85,7 @@ public class Connessione extends Thread {
             while (bufferedReader.ready()){
                 String[] informazioni = bufferedReader.readLine().split(";");
                 Monumento monumento = new Monumento(informazioni[0], informazioni[1], informazioni[2], informazioni[3],
-                                                    informazioni[4], Year.parse(informazioni[5]), LocalDateTime.parse(informazioni[6]),
+                                                    informazioni[4], Year.parse(informazioni[5]), LocalDateTime.parse(informazioni[6].substring(0, informazioni[6].length() - 1)),
                                                     informazioni[7], Double.parseDouble(informazioni[8]), Double.parseDouble(informazioni[9]));
                 monumenti.add(monumento);
             }
