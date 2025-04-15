@@ -1,3 +1,6 @@
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.*;
 import java.net.Socket;
 import java.time.LocalDateTime;
@@ -43,28 +46,36 @@ public class Connessione extends Thread {
     }
 
     private void esegui(){
-        String comando;
+        JSONObject partiComando;
 
         do {
             try {
-                comando = in.readLine();
-                System.out.println(comando);
+                partiComando = new JSONObject(in.readLine());
+                System.out.println(partiComando);
 
-                eseguiComando(comando);
+                String comando = partiComando.getString("comando");
+                String parametro;
+                try{
+                    parametro = partiComando.getString("parametro");
+                }catch (JSONException e){
+                    break;
+                }
+
+                eseguiComando(comando, parametro);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        } while(!comando.equals("END"));
+        } while(!partiComando.getString("comando").equals("END"));
 
         System.out.println("Server: closing...");
         chiudi();
         System.out.println("Server: closed");
     }
 
-    public void eseguiComando(String comando){
-        if(comando.startsWith(Comando.GET_ROW.nome)) {
-            int riga = Integer.parseInt(comando.substring(Comando.GET_ROW.lunghezzaComando + 1));
-            System.out.println(riga);
+    public void eseguiComando(String comando, String parametro){
+        if(comando.equals("GET_ROW")) {
+            System.out.println(parametro);
+            int riga = Integer.parseInt(parametro);
             out.println(monumenti.get(riga));
             out.flush();
         }

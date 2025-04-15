@@ -1,3 +1,6 @@
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -5,10 +8,32 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import org.json.JSONObject;
 
-public class Main {
+import javax.swing.*;
+
+public class Main{
     final static String nomeServer = "localhost";
     final static int portaServer = 1050;
+
+    static JFrame jFrame = new JFrame();
+    static JTextField areaComando = new JTextField();
+    static JTextField areaParametro = new JTextField();
+    static JButton jButton = new JButton("Invia comando");
+
     public static void main(String[] args) {
+        jFrame.setBounds(10, 10, 500, 500);
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jFrame.setLayout(new FlowLayout());
+
+        areaComando.setPreferredSize(new Dimension(100, 20));
+        areaParametro.setPreferredSize(new Dimension(100, 20));
+        jButton.setPreferredSize(new Dimension(100, 20));
+
+        jFrame.add(areaComando);
+        jFrame.add(areaParametro);
+        jFrame.add(jButton);
+        jFrame.pack();
+        jFrame.setVisible(true);
+
         System.out.println("Connessione al server in corso...");
         try (Socket sck = new Socket(nomeServer, portaServer)) {
             String rem = sck.getRemoteSocketAddress().toString();
@@ -29,23 +54,26 @@ public class Main {
         Scanner s = new Scanner(System.in, StandardCharsets.UTF_8);
 
         String comando;
+        JSONObject jsonComando;
         do {
-            System.out.print("Comando: ");
+            System.out.print("\nComando: ");
             comando = s.nextLine();
 
-            JSONObject jsonComando = new JSONObject();
-            jsonComando.put("comando", comando);
-            System.out.println(jsonComando);
+            String[] partiComando = comando.split(" ");
 
-            // Potrei leggere dal comando fino alla fine della stringa, poi faccio uno split della virgola e ottento i due parametri, che possono essere solo 1
+            jsonComando = new JSONObject();
+            jsonComando.put("comando", partiComando[0]);
+            if(!comando.equals("END")) jsonComando.put("parametro", partiComando[1]);
 
-            System.out.format("Invio al server: %s%n", comando);
+            System.out.format("Invio al server: %s%n", jsonComando);
 
-            out.println(comando);
-            System.out.println(in.readLine());
+            out.println(jsonComando);
             System.out.println("In attesa di risposta dal server...");
+
             String risposta = in.readLine();
+            System.out.println(risposta);
+            risposta = in.readLine();
             System.out.format("Risposta dal server: %s%n", risposta);
-        } while(!comando.equals("END"));
+        } while(!jsonComando.getString("comando").equals("END")); // CAMBIO PERCHé QUI è TUTTO IL COMANDO
     }
 }
