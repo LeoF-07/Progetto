@@ -1,16 +1,14 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import org.json.JSONObject;
-
 import javax.swing.*;
 
 public class Main{
+
     final static String nomeServer = "localhost";
     final static int portaServer = 1050;
 
@@ -41,12 +39,14 @@ public class Main{
             System.out.format("Server (remoto): %s%n", rem);
             System.out.format("Client (client): %s%n", loc);
             comunica(sck);
+            System.exit(0);
         } catch (UnknownHostException e) {
             System.err.format("Nome di server non valido: %s%n", e.getMessage());
         } catch (IOException e) {
             System.err.format("Errore durante la comunicazione con il server: %s%n", e.getMessage());
         }
     }
+
     private static void comunica(Socket sck) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(sck.getInputStream(), StandardCharsets.UTF_8));
         PrintWriter out = new PrintWriter(new OutputStreamWriter(sck.getOutputStream(), StandardCharsets.UTF_8), true);
