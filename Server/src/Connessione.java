@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 public class Connessione extends Thread {
 
+    private final static String FINE_TRASMISSIONE = "FINE";
+
     private Socket clientSocket;
 
     private BufferedReader in = null;
@@ -72,12 +74,168 @@ public class Connessione extends Thread {
         System.out.println("Server: closed");
     }
 
-    public void eseguiComando(String comando, String parametro){
-        if(comando.equals("GET_ROW")) {
-            System.out.println(parametro);
-            int riga = Integer.parseInt(parametro);
-            out.println(monumenti.get(riga));
-            out.flush();
+    public void eseguiComando(String nomeComando, String parametro){ // Potrei fare che invia json di monumenti, in modo che possano essere gestiti in liste anche sul Client, o semplicemente visualizzati in base ai campi nella GUI del Client
+        Comando comando = null;
+        for(Comando c : Comando.values()) if(c.nome.equals(nomeComando)) comando = c;
+        if(comando == null) return;
+
+        double longitudine1;
+        double longitudine2;
+        double latitudine1;
+        double latitudine2;
+
+        switch (comando){
+            case GET_ROW:
+                int riga = Integer.parseInt(parametro);
+                out.println(monumenti.get(riga));
+                out.flush();
+                out.println(FINE_TRASMISSIONE);
+                out.flush();
+                break;
+
+            case GET_PER_COMUNE:
+                for (Monumento monumento : monumenti){
+                    if(monumento.getComune().equals(parametro)) {
+                        out.println(monumento);
+                        out.flush();
+                    }
+                }
+                out.println(FINE_TRASMISSIONE);
+                out.flush();
+                break;
+
+            case GET_PER_PROVINCIA:
+                for (Monumento monumento : monumenti){
+                    if(monumento.getProvincia().equals(parametro)) {
+                        out.println(monumento);
+                        out.flush();
+                    }
+                }
+                out.println(FINE_TRASMISSIONE);
+                out.flush();
+                break;
+
+            case GET_PER_REGIONE:
+                for (Monumento monumento : monumenti){
+                    if(monumento.getRegione().equals(parametro)) {
+                        out.println(monumento);
+                        out.flush();
+                    }
+                }
+                out.println(FINE_TRASMISSIONE);
+                out.flush();
+                break;
+
+            case GET_PER_NOME:
+                for (Monumento monumento : monumenti){
+                    if(monumento.getNome().equals(parametro)) {
+                        out.println(monumento);
+                        out.flush();
+                    }
+                }
+                out.println(FINE_TRASMISSIONE);
+                out.flush();
+                break;
+
+            case GET_PER_NOME_PARZIALE:
+                for (Monumento monumento : monumenti){
+                    if(monumento.getNome().contains(parametro)) {
+                        out.println(monumento);
+                        out.flush();
+                    }
+                }
+                out.println(FINE_TRASMISSIONE);
+                out.flush();
+                break;
+
+            case GET_PER_TIPO:
+                for (Monumento monumento : monumenti){
+                    if(monumento.getTipo().equals(parametro)) {
+                        out.println(monumento);
+                        out.flush();
+                    }
+                }
+                out.println(FINE_TRASMISSIONE);
+                out.flush();
+                break;
+
+            case GET_PER_ANNO:
+                for (Monumento monumento : monumenti){
+                    if(monumento.getAnnoInserimento().equals(Year.parse(parametro))) {
+                        out.println(monumento);
+                        out.flush();
+                    }
+                }
+                out.println(FINE_TRASMISSIONE);
+                out.flush();
+                break;
+
+            case GET_PER_ANNI:
+                String[] anni = parametro.split(" "); // O FACCIO COSÌ O DOVREI MANDARE UN'ARRAY DI PARAMETRI SUL JSON, FORSE È PIÙ COMODO COSÌ
+                Year anno1 = Year.parse(anni[0]);
+                Year anno2 = Year.parse(anni[1]);
+
+                for (Monumento monumento : monumenti){
+                    if(monumento.getAnnoInserimento().compareTo(anno1) >= 0 && monumento.getAnnoInserimento().compareTo(anno2) <= 0) {
+                        out.println(monumento);
+                        out.flush();
+                    }
+                }
+                out.println(FINE_TRASMISSIONE);
+                out.flush();
+
+                break;
+
+            case GET_TRA_LONGITUDINI:
+                String[] longitudini = parametro.split(" "); // O FACCIO COSÌ O DOVREI MANDARE UN'ARRAY DI PARAMETRI SUL JSON, FORSE È PIÙ COMODO COSÌ
+                longitudine1 = Double.parseDouble(longitudini[0]);
+                longitudine2 = Double.parseDouble(longitudini[1]);
+
+                for (Monumento monumento : monumenti){
+                    if(monumento.getLongitudine() >= longitudine1 && monumento.getLongitudine() <= longitudine2) {
+                        out.println(monumento);
+                        out.flush();
+                    }
+                }
+                out.println(FINE_TRASMISSIONE);
+                out.flush();
+
+                break;
+
+            case GET_TRA_LATITUDINI:
+                String[] latitudini = parametro.split(" "); // O FACCIO COSÌ O DOVREI MANDARE UN'ARRAY DI PARAMETRI SUL JSON, FORSE È PIÙ COMODO COSÌ
+                latitudine1 = Double.parseDouble(latitudini[0]);
+                latitudine2 = Double.parseDouble(latitudini[1]);
+
+                for (Monumento monumento : monumenti){
+                    if(monumento.getLatitudine() >= latitudine1 && monumento.getLatitudine() <= latitudine2) {
+                        out.println(monumento);
+                        out.flush();
+                    }
+                }
+                out.println(FINE_TRASMISSIONE);
+                out.flush();
+
+                break;
+
+            case GET_TRA_LONGITUDINI_E_LATITUDINI:
+                String[] longitudiniELatidudini = parametro.split(" ");
+                longitudine1 = Double.parseDouble(longitudiniELatidudini[0]);
+                longitudine2 = Double.parseDouble(longitudiniELatidudini[1]);
+                latitudine1 = Double.parseDouble(longitudiniELatidudini[2]);
+                latitudine2 = Double.parseDouble(longitudiniELatidudini[3]);
+
+                System.out.println(longitudine1 + " " + longitudine2 + " " + latitudine1 + " " + latitudine2);
+
+                for (Monumento monumento : monumenti){
+                    if(monumento.getLongitudine() >= longitudine1 && monumento.getLongitudine() <= longitudine2 && monumento.getLatitudine() >= latitudine1 && monumento.getLatitudine() <= latitudine2) {
+                        out.println(monumento);
+                        out.flush();
+                    }
+                }
+                out.println(FINE_TRASMISSIONE);
+                out.flush();
+                break;
         }
     }
 
