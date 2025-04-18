@@ -11,6 +11,9 @@ public class Main{
     final static String nomeServer = "localhost";
     final static int portaServer = 1050;
 
+    private static BufferedReader in;
+    private static PrintWriter out;
+
     public static void main(String[] args) {
         System.out.println("Connessione al server in corso...");
         try (Socket sck = new Socket(nomeServer, portaServer)) {
@@ -28,8 +31,16 @@ public class Main{
     }
 
     private static void comunica(Socket sck) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(sck.getInputStream(), StandardCharsets.UTF_8));
-        PrintWriter out = new PrintWriter(new OutputStreamWriter(sck.getOutputStream(), StandardCharsets.UTF_8), true);
+        in = new BufferedReader(new InputStreamReader(sck.getInputStream(), StandardCharsets.UTF_8));
+        out = new PrintWriter(new OutputStreamWriter(sck.getOutputStream(), StandardCharsets.UTF_8), true);
+
+        JSONObject j = new JSONObject();
+        j.put("comando", "GET");
+        j.put("parametro", "");
+        out.println(j);
+        String comandi = in.readLine();
+        comandi = in.readLine();
+        GUI gui = new GUI(comandi.split(" "));
 
         Scanner s = new Scanner(System.in, StandardCharsets.UTF_8);
 
@@ -52,19 +63,39 @@ public class Main{
             if(!comando.equals("END")) jsonComando.put("parametro", partiComando[1]);
 
             System.out.format("Invio al server: %s%n", jsonComando);
-
             out.println(jsonComando);
+
             System.out.println("In attesa di risposta dal server...");
 
             String risposta = in.readLine();
-            /*do{
-                System.out.format("Risposta dal server: %s%n", risposta);
-                risposta = in.readLine();
-            }while(risposta != null && !risposta.equals("FINE"));*/
             while(risposta != null && !risposta.equals("FINE")){
                 System.out.format("Risposta dal server: %s%n", risposta);
                 risposta = in.readLine();
             }
         } while(!jsonComando.getString("comando").equals("END")); // CAMBIO PERCHé QUI è TUTTO IL COMANDO
     }
+
+    public static void inviaComando(String comando, String parametro){
+        JSONObject jsonComando = new JSONObject();
+        jsonComando.put("comando", comando);
+        jsonComando.put("parametro", parametro);
+
+        System.out.format("Invio al server: %s%n", jsonComando);
+        out.println(jsonComando);
+
+        System.out.println("In attesa di risposta dal server...");
+
+        try {
+            String risposta = in.readLine();
+            while(risposta != null && !risposta.equals("FINE")){
+                System.out.format("Risposta dal server: %s%n", risposta);
+                risposta = in.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.print("\nComando: ");
+    }
+
 }

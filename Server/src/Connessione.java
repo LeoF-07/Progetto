@@ -75,6 +75,17 @@ public class Connessione extends Thread {
     }
 
     public void eseguiComando(String nomeComando, String parametro){ // Potrei fare che invia json di monumenti, in modo che possano essere gestiti in liste anche sul Client, o semplicemente visualizzati in base ai campi nella GUI del Client
+        if(nomeComando.equals("GET")){
+            String comandi = "";
+            for(int i = 0; i < Comando.values().length; i++) {
+                if(i != Comando.values().length - 1) comandi += Comando.values()[i].nome + " ";
+                else comandi += Comando.values()[i].nome;
+            }
+            out.println(comandi);
+            out.flush();
+            return;
+        }
+
         Comando comando = null;
         for(Comando c : Comando.values()) if(c.nome.equals(nomeComando)) comando = c;
         if(comando == null) return;
@@ -95,7 +106,7 @@ public class Connessione extends Thread {
 
             case GET_PER_COMUNE:
                 for (Monumento monumento : monumenti){
-                    if(monumento.getComune().equals(parametro)) {
+                    if(monumento.getComune().equalsIgnoreCase(parametro)) {
                         out.println(monumento);
                         out.flush();
                     }
@@ -106,7 +117,7 @@ public class Connessione extends Thread {
 
             case GET_PER_PROVINCIA:
                 for (Monumento monumento : monumenti){
-                    if(monumento.getProvincia().equals(parametro)) {
+                    if(monumento.getProvincia().equalsIgnoreCase(parametro)) {
                         out.println(monumento);
                         out.flush();
                     }
@@ -117,7 +128,7 @@ public class Connessione extends Thread {
 
             case GET_PER_REGIONE:
                 for (Monumento monumento : monumenti){
-                    if(monumento.getRegione().equals(parametro)) {
+                    if(monumento.getRegione().equalsIgnoreCase(parametro)) {
                         out.println(monumento);
                         out.flush();
                     }
