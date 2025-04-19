@@ -30,23 +30,25 @@ public class Main{
         }
     }
 
-    private static void comunica(Socket sck) throws IOException {
-        in = new BufferedReader(new InputStreamReader(sck.getInputStream(), StandardCharsets.UTF_8));
-        out = new PrintWriter(new OutputStreamWriter(sck.getOutputStream(), StandardCharsets.UTF_8), true);
+    private static void comunica(Socket sck) {
+        try {
+            in = new BufferedReader(new InputStreamReader(sck.getInputStream(), StandardCharsets.UTF_8));
+            out = new PrintWriter(new OutputStreamWriter(sck.getOutputStream(), StandardCharsets.UTF_8), true);
 
-        JSONObject j = new JSONObject();
-        j.put("comando", "GET");
-        j.put("parametro", "");
-        out.println(j);
-        String comandi = in.readLine();
-        comandi = in.readLine();
-        GUI gui = new GUI(comandi.split(" "));
+            JSONObject j = new JSONObject();
+            j.put("comando", "GET");
+            j.put("parametro", "");
+            out.println(j);
+            String comandi = in.readLine();
+            comandi = in.readLine();
+            GUI gui = new GUI(comandi.split(" "));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         Scanner s = new Scanner(System.in, StandardCharsets.UTF_8);
 
         String comando;
-        JSONObject jsonComando;
-
         do {
             System.out.print("\nComando: ");
             comando = s.nextLine();
@@ -55,27 +57,24 @@ public class Main{
 
             String[] partiComando = new String[2];
             partiComando[0] = split[0];
-            if(!comando.equals("END")) partiComando[1] = split[1];
-            for(int i = 2; i < split.length; i++) partiComando[1] += " " + split[i];
-
-            jsonComando = new JSONObject();
-            jsonComando.put("comando", partiComando[0]);
-            if(!comando.equals("END")) jsonComando.put("parametro", partiComando[1]);
-
-            System.out.format("Invio al server: %s%n", jsonComando);
-            out.println(jsonComando);
-
-            System.out.println("In attesa di risposta dal server...");
-
-            String risposta = in.readLine();
-            while(risposta != null && !risposta.equals("FINE")){
-                System.out.format("Risposta dal server: %s%n", risposta);
-                risposta = in.readLine();
+            try{
+                partiComando[1] = split[1];
+                for(int i = 2; i < split.length; i++) partiComando[1] += " " + split[i];
+            } catch (ArrayIndexOutOfBoundsException e){
+                partiComando[1] = "";
             }
-        } while(!jsonComando.getString("comando").equals("END")); // CAMBIO PERCHé QUI è TUTTO IL COMANDO
+
+            comando = serializzaEInviaAlServer(partiComando[0], partiComando[1]);
+        } while(!comando.equals("END"));
     }
 
     public static void inviaComando(String comando, String parametro){
+        serializzaEInviaAlServer(comando, parametro);
+        if(comando.equals("END")) System.exit(0);
+        System.out.print("\nComando: ");
+    }
+
+    public static String serializzaEInviaAlServer(String comando, String parametro){
         JSONObject jsonComando = new JSONObject();
         jsonComando.put("comando", comando);
         jsonComando.put("parametro", parametro);
@@ -85,8 +84,9 @@ public class Main{
 
         System.out.println("In attesa di risposta dal server...");
 
+        String risposta;
         try {
-            String risposta = in.readLine();
+            risposta = in.readLine();
             while(risposta != null && !risposta.equals("FINE")){
                 System.out.format("Risposta dal server: %s%n", risposta);
                 risposta = in.readLine();
@@ -95,7 +95,7 @@ public class Main{
             throw new RuntimeException(e);
         }
 
-        System.out.print("\nComando: ");
+        return comando;
     }
 
 }

@@ -56,22 +56,13 @@ public class Connessione extends Thread {
                 System.out.println(partiComando);
 
                 String comando = partiComando.getString("comando");
-                String parametro;
-                try{
-                    parametro = partiComando.getString("parametro");
-                }catch (JSONException e){
-                    break;
-                }
+                String parametro = partiComando.getString("parametro");
 
                 eseguiComando(comando, parametro);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        } while(!partiComando.getString("comando").equals("END"));
-
-        System.out.println("Server: closing...");
-        chiudi();
-        System.out.println("Server: closed");
+        } while(!partiComando.getString("comando").equals(Comando.END.nome));
     }
 
     public void eseguiComando(String nomeComando, String parametro){ // Potrei fare che invia json di monumenti, in modo che possano essere gestiti in liste anche sul Client, o semplicemente visualizzati in base ai campi nella GUI del Client
@@ -246,6 +237,12 @@ public class Connessione extends Thread {
                 }
                 out.println(FINE_TRASMISSIONE);
                 out.flush();
+                break;
+
+            case END:
+                System.out.println("Server: closing...");
+                chiudi();
+                System.out.println("Server: closed");
                 break;
         }
     }
