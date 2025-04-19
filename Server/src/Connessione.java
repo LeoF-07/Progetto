@@ -68,11 +68,21 @@ public class Connessione extends Thread {
     public void eseguiComando(String nomeComando, String parametro){ // Potrei fare che invia json di monumenti, in modo che possano essere gestiti in liste anche sul Client, o semplicemente visualizzati in base ai campi nella GUI del Client
         if(nomeComando.equals("GET")){
             String comandi = "";
+            String parametriPrevisti = "";
             for(int i = 0; i < Comando.values().length; i++) {
-                if(i != Comando.values().length - 1) comandi += Comando.values()[i].nome + " ";
-                else comandi += Comando.values()[i].nome;
+                if(i != Comando.values().length - 1) {
+                    comandi += Comando.values()[i].nome + " ";
+                    parametriPrevisti += Comando.values()[i].parametriPrevisti + " ";
+                }
+                else {
+                    comandi += Comando.values()[i].nome;
+                    parametriPrevisti += Comando.values()[i].parametriPrevisti;
+                }
+
             }
             out.println(comandi);
+            out.flush();
+            out.println(parametriPrevisti);
             out.flush();
             return;
         }

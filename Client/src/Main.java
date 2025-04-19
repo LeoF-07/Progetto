@@ -39,9 +39,10 @@ public class Main{
             j.put("comando", "GET");
             j.put("parametro", "");
             out.println(j);
-            String comandi = in.readLine();
-            comandi = in.readLine();
-            GUI gui = new GUI(comandi.split(" "));
+            in.readLine(); // Legge il messaggio iniziale
+            String comandi = in.readLine(); // Legge una stringa contenente tutti i comandi
+            String parametriPrevisti = in.readLine(); // Legge una stringa contenente il numero di parametri previsto per ogni comando
+            GUI gui = new GUI(comandi.split(" "), parametriPrevisti.split(" "));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
