@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class GUI extends JFrame {
 
@@ -13,10 +14,13 @@ public class GUI extends JFrame {
     private JTextField[] parametri;
     private JTextArea descrizione;
     private JButton invia;
+    private JFrame frameTabella;
+
+    private ArrayList<String> risposte;
 
     private int max;
 
-    public GUI(String[] comandi, String[] parametriPrevisti, String[] descrizioni){
+    public GUI(String[] comandi, String[] parametriPrevisti, String[] descrizioni, String[] attributiMonumento){
         this.setLayout(null);
 
         selectComandi = new JComboBox<>(comandi);
@@ -42,6 +46,15 @@ public class GUI extends JFrame {
         invia = new JButton("Invia comando");
         invia.setBounds(800, 80, 150, 20);
 
+        String[][] data = new String[1][attributiMonumento.length];
+        data[0] = attributiMonumento;
+        tabellaMonumenti = new JTable(data, attributiMonumento);
+        tabellaMonumenti.setLayout(null);
+        tabellaMonumenti.setBounds(0, 0, 1800, 100);
+        //tabellaMonumenti.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tabellaMonumenti.doLayout();
+        tabellaMonumenti.setBackground(Color.ORANGE);
+
         selectComandi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -64,7 +77,23 @@ public class GUI extends JFrame {
                     else parametro += parametri[i].getText();
                 }
 
-                Main.inviaComando((String) selectComandi.getSelectedItem(), parametro);
+                risposte = Main.inviaComando((String) selectComandi.getSelectedItem(), parametro);
+                String[][] data = new String[risposte.size() + 1][attributiMonumento.length];
+                data[0] = attributiMonumento;
+                for(int i = 0; i < risposte.size(); i++) data[i + 1] = risposte.get(i).split(";");
+                tabellaMonumenti = new JTable(data, attributiMonumento);
+                tabellaMonumenti.setLayout(null);
+                tabellaMonumenti.setBounds(0, 0, 1800, 800);
+                //tabellaMonumenti.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+                tabellaMonumenti.doLayout();
+                tabellaMonumenti.setBackground(Color.ORANGE);
+                tabellaMonumenti.setVisible(true);
+
+                scrollPaneTabella = new JScrollPane(tabellaMonumenti);
+                scrollPaneTabella.setBounds(0, 0, 1800, 800);
+
+                tabella.add(scrollPaneTabella);
+                frameTabella.setVisible(true);
             }
         });
 
@@ -76,9 +105,23 @@ public class GUI extends JFrame {
 
         comandoEParametro.add(descrizione);
         comandoEParametro.add(invia);
-        comandoEParametro.setBounds(0, 0, 1000, 300);
+        comandoEParametro.setBounds(0, 0, 1000, 250);
+        comandoEParametro.setBackground(Color.ORANGE);
+
+        frameTabella = new JFrame("Risposta");
+        frameTabella.setLayout(null);
+        frameTabella.setBounds(0, 0, 2000, 800);
+        frameTabella.setVisible(false);
+
+        tabella = new JPanel();
+        tabella.setLayout(null);
+        tabella.setBackground(Color.BLUE);
+        //tabella.add(tabellaMonumenti);
+        tabella.setBounds(0, 0, 2000, 800);
 
         this.add(comandoEParametro);
+        frameTabella.add(tabella);
+
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setBounds(80, 80, 1000, 800);

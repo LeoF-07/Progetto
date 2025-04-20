@@ -15,7 +15,7 @@ public class Monumento {
     private double longitudine;
     private double latitudine;
 
-    public String getParametri(){
+    public static String getAttributi(){
         return "comune;provincia;regione;nome;tipo;annoInserimento;dataEOraInserimento;identificatoreOpenStreetMap;longitudine;latitudine";
     }
 

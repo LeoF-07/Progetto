@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Scanner;
 import org.json.JSONObject;
 
@@ -13,6 +14,8 @@ public class Main{
 
     private static BufferedReader in;
     private static PrintWriter out;
+
+    private static String[] attributiMonumento;
 
     public static void main(String[] args) {
         System.out.println("Connessione al server in corso...");
@@ -42,22 +45,23 @@ public class Main{
             in.readLine(); // Legge il messaggio iniziale
             String comandi = in.readLine(); // Legge una stringa contenente tutti i comandi
             String parametriPrevisti = in.readLine(); // Legge una stringa contenente il numero di parametri previsto per ogni comando
-            String descrizioni = in.readLine();
-            GUI gui = new GUI(comandi.split(";"), parametriPrevisti.split(";"), descrizioni.split(";"));
+            String descrizioni = in.readLine(); // Legge una stringa contenente tutte le descrizioni per ogni comando
+            attributiMonumento = in.readLine().split(";");
+            GUI gui = new GUI(comandi.split(";"), parametriPrevisti.split(";"), descrizioni.split(";"), attributiMonumento);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         Scanner s = new Scanner(System.in, StandardCharsets.UTF_8);
 
-        String comando;
+        String[] partiComando;
         do {
             System.out.print("\nComando: ");
-            comando = s.nextLine();
+            String comando = s.nextLine();
 
             String[] split = comando.split(" ");
 
-            String[] partiComando = new String[2];
+            partiComando = new String[2];
             partiComando[0] = split[0];
             try{
                 partiComando[1] = split[1];
@@ -66,17 +70,18 @@ public class Main{
                 partiComando[1] = "";
             }
 
-            comando = serializzaEInviaAlServer(partiComando[0], partiComando[1]);
-        } while(!comando.equals("END"));
+            serializzaEInviaAlServer(partiComando[0], partiComando[1]);
+        } while(!partiComando[0].equals("END"));
     }
 
-    public static void inviaComando(String comando, String parametro){
-        serializzaEInviaAlServer(comando, parametro);
+    public static ArrayList<String> inviaComando(String comando, String parametro){
+        ArrayList<String> risposte = serializzaEInviaAlServer(comando, parametro);
         if(comando.equals("END")) System.exit(0);
         System.out.print("\nComando: ");
+        return risposte;
     }
 
-    public static String serializzaEInviaAlServer(String comando, String parametro){
+    public static ArrayList<String> serializzaEInviaAlServer(String comando, String parametro){
         JSONObject jsonComando = new JSONObject();
         jsonComando.put("comando", comando);
         jsonComando.put("parametro", parametro);
@@ -87,17 +92,24 @@ public class Main{
         System.out.println("In attesa di risposta dal server...");
 
         String risposta;
+        ArrayList<String> risposte = new ArrayList<>();
         try {
             risposta = in.readLine();
             while(risposta != null && !risposta.equals("FINE")){
-                System.out.format("Risposta dal server: %s%n", risposta);
+                JSONObject jsonMonumento = new JSONObject(risposta);
+
+                String monumento = "";
+                for (String attributo : attributiMonumento) monumento += jsonMonumento.get(attributo) + ";";
+                System.out.format("Risposta dal server: Monumento: %s%n", monumento);
+                risposte.add(monumento);
+
                 risposta = in.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        return comando;
+        return risposte;
     }
 
 }

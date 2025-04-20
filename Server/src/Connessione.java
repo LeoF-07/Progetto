@@ -87,6 +87,10 @@ public class Connessione extends Thread {
             out.println(parametriPrevisti);
             out.flush();
             out.println(descrizioni);
+
+            out.println(Monumento.getAttributi());
+            out.flush();
+
             return;
         }
 
@@ -102,7 +106,8 @@ public class Connessione extends Thread {
         switch (comando){
             case GET_ROW:
                 int riga = Integer.parseInt(parametro);
-                out.println(monumenti.get(riga));
+                //out.println(monumenti.get(riga));
+                out.println(new JSONObject(monumenti.get(riga)));
                 out.flush();
                 out.println(FINE_TRASMISSIONE);
                 out.flush();
@@ -111,7 +116,8 @@ public class Connessione extends Thread {
             case GET_PER_COMUNE:
                 for (Monumento monumento : monumenti){
                     if(monumento.getComune().equalsIgnoreCase(parametro)) {
-                        out.println(monumento);
+                        //out.println(monumento);
+                        out.println(new JSONObject(monumento));
                         out.flush();
                     }
                 }
@@ -122,7 +128,8 @@ public class Connessione extends Thread {
             case GET_PER_PROVINCIA:
                 for (Monumento monumento : monumenti){
                     if(monumento.getProvincia().equalsIgnoreCase(parametro)) {
-                        out.println(monumento);
+                        //out.println(monumento);
+                        out.println(new JSONObject(monumento));
                         out.flush();
                     }
                 }
@@ -133,7 +140,8 @@ public class Connessione extends Thread {
             case GET_PER_REGIONE:
                 for (Monumento monumento : monumenti){
                     if(monumento.getRegione().equalsIgnoreCase(parametro)) {
-                        out.println(monumento);
+                        //out.println(monumento);
+                        out.println(new JSONObject(monumento));
                         out.flush();
                     }
                 }
@@ -144,7 +152,8 @@ public class Connessione extends Thread {
             case GET_PER_NOME:
                 for (Monumento monumento : monumenti){
                     if(monumento.getNome().equals(parametro)) {
-                        out.println(monumento);
+                        //out.println(monumento);
+                        out.println(new JSONObject(monumento));
                         out.flush();
                     }
                 }
@@ -155,7 +164,8 @@ public class Connessione extends Thread {
             case GET_PER_NOME_PARZIALE:
                 for (Monumento monumento : monumenti){
                     if(monumento.getNome().contains(parametro)) {
-                        out.println(monumento);
+                        //out.println(monumento);
+                        out.println(new JSONObject(monumento));
                         out.flush();
                     }
                 }
@@ -166,7 +176,8 @@ public class Connessione extends Thread {
             case GET_PER_TIPO:
                 for (Monumento monumento : monumenti){
                     if(monumento.getTipo().equals(parametro)) {
-                        out.println(monumento);
+                        //out.println(monumento);
+                        out.println(new JSONObject(monumento));
                         out.flush();
                     }
                 }
@@ -177,7 +188,8 @@ public class Connessione extends Thread {
             case GET_PER_ANNO:
                 for (Monumento monumento : monumenti){
                     if(monumento.getAnnoInserimento().equals(Year.parse(parametro))) {
-                        out.println(monumento);
+                        //out.println(monumento);
+                        out.println(new JSONObject(monumento));
                         out.flush();
                     }
                 }
@@ -192,7 +204,8 @@ public class Connessione extends Thread {
 
                 for (Monumento monumento : monumenti){
                     if(monumento.getAnnoInserimento().compareTo(anno1) >= 0 && monumento.getAnnoInserimento().compareTo(anno2) <= 0) {
-                        out.println(monumento);
+                        //out.println(monumento);
+                        out.println(new JSONObject(monumento));
                         out.flush();
                     }
                 }
@@ -208,7 +221,8 @@ public class Connessione extends Thread {
 
                 for (Monumento monumento : monumenti){
                     if(monumento.getLongitudine() >= longitudine1 && monumento.getLongitudine() <= longitudine2) {
-                        out.println(monumento);
+                        //out.println(monumento);
+                        out.println(new JSONObject(monumento));
                         out.flush();
                     }
                 }
@@ -224,7 +238,8 @@ public class Connessione extends Thread {
 
                 for (Monumento monumento : monumenti){
                     if(monumento.getLatitudine() >= latitudine1 && monumento.getLatitudine() <= latitudine2) {
-                        out.println(monumento);
+                        //out.println(monumento);
+                        out.println(new JSONObject(monumento));
                         out.flush();
                     }
                 }
@@ -244,7 +259,8 @@ public class Connessione extends Thread {
 
                 for (Monumento monumento : monumenti){
                     if(monumento.getLongitudine() >= longitudine1 && monumento.getLongitudine() <= longitudine2 && monumento.getLatitudine() >= latitudine1 && monumento.getLatitudine() <= latitudine2) {
-                        out.println(monumento);
+                        //out.println(monumento);
+                        out.println(new JSONObject(monumento));
                         out.flush();
                     }
                 }
