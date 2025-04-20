@@ -21,20 +21,6 @@ public class GUI extends JFrame {
 
     private int max;
 
-    public FocusListener addPlaceHolder(JTextField j){
-        return new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                j.setText("");
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if(j.getText().isEmpty()) j.setText("Parametro");
-            }
-        };
-    }
-
     public GUI(String[] comandi, String[] parametriPrevisti, String[] descrizioni, String[] attributiMonumento){
         super("Selezione comando");
 
@@ -66,9 +52,6 @@ public class GUI extends JFrame {
         invia = new JButton("Invia comando");
         invia.setBounds(800, 80, 150, 20);
 
-        // tabellaMonumenti.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        // tabellaMonumenti.doLayout();
-
         scrollPaneTabella = new JScrollPane(tabellaMonumenti);
         scrollPaneTabella.setBounds(0, 0, 1800, 800);
 
@@ -97,9 +80,20 @@ public class GUI extends JFrame {
 
                 try {
                     risposte = Main.inviaComando((String) selectComandi.getSelectedItem(), parametro);
+                } catch(ServerChiusoException ex){
+                    System.out.println(ex.getMessage());
+                    JOptionPane.showMessageDialog(invia, ex.getMessage());
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException exc) {
+                        throw new RuntimeException(exc);
+                    }
+                    System.exit(0);
+                    return;
                 } catch (Exception ex) {
                     System.out.println(ex.getMessage());
                     JOptionPane.showMessageDialog(invia, ex.getMessage());
+                    System.out.println("\nComando: ");
                     return;
                 }
 
@@ -136,6 +130,20 @@ public class GUI extends JFrame {
         this.setBounds(80, 80, 1000, 300);
         this.setResizable(false);
         this.setVisible(true);
+    }
+
+    public FocusListener addPlaceHolder(JTextField j){
+        return new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                j.setText("");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if(j.getText().isEmpty()) j.setText("Parametro");
+            }
+        };
     }
 
 }

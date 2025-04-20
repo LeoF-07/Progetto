@@ -74,6 +74,9 @@ public class Main{
 
             try {
                 serializzaEInviaAlServer(partiComando[0], partiComando[1]);
+            } catch (ServerChiusoException e){
+                System.out.println(e.getMessage());
+                System.exit(0);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -99,6 +102,7 @@ public class Main{
 
         String risposta;
         ArrayList<String> risposte = new ArrayList<>();
+
         try {
             risposta = in.readLine();
             if(risposta != null &&  risposta.startsWith("ERROR:")) throw new Exception(risposta);
@@ -113,7 +117,7 @@ public class Main{
                 risposta = in.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ServerChiusoException("Il Server è stato chiuso o riavviato");
         }
 
         return risposte;

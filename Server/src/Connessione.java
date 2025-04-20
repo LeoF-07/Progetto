@@ -1,4 +1,3 @@
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -49,27 +48,29 @@ public class Connessione extends Thread {
 
     private void esegui(){
         JSONObject partiComando;
-
         do {
             try {
                 partiComando = new JSONObject(in.readLine());
-                System.out.println(partiComando);
 
                 String comando = partiComando.getString("comando");
                 String parametro = partiComando.getString("parametro");
 
                 eseguiComando(comando, parametro);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                System.out.println("È stata eseguita avvenuta la chiusura forzata del Server");
+                return;
             }
         } while(!partiComando.getString("comando").equals(Comando.END.nome));
+
+        System.out.println("\nDigita STOP in qualsiasi momento per spegnere il Server\n");
     }
 
-    public void eseguiComando(String nomeComando, String parametro){ // Potrei fare che invia json di monumenti, in modo che possano essere gestiti in liste anche sul Client, o semplicemente visualizzati in base ai campi nella GUI del Client
+    public void eseguiComando(String nomeComando, String parametro){
         if(nomeComando.equals("GET")){
             String comandi = "";
             String parametriPrevisti = "";
             String descrizioni = "";
+
             for(int i = 0; i < Comando.values().length; i++) {
                 if(i != Comando.values().length - 1) {
                     comandi += Comando.values()[i].nome + ";";
@@ -79,7 +80,7 @@ public class Connessione extends Thread {
                 else {
                     comandi += Comando.values()[i].nome;
                     parametriPrevisti += Comando.values()[i].parametriPrevisti;
-                    descrizioni += Comando.values()[i].descrizione + ";";
+                    descrizioni += Comando.values()[i].descrizione;
                 }
             }
             out.println(comandi);
@@ -96,7 +97,11 @@ public class Connessione extends Thread {
 
         Comando comando = null;
         for(Comando c : Comando.values()) if(c.nome.equals(nomeComando)) comando = c;
-        if(comando == null) return;
+        if(comando == null){
+            out.println("ERROR: Comando inesistente");
+            out.flush();
+            return;
+        }
 
         double longitudine1;
         double longitudine2;
@@ -111,7 +116,6 @@ public class Connessione extends Thread {
                 try{
                     riga = Integer.parseInt(parametro);
                     out.println(new JSONObject(monumenti.get(riga)));
-                    out.flush();
                     out.println(FINE_TRASMISSIONE);
                     out.flush();
                 }catch (NumberFormatException ex){
@@ -129,7 +133,6 @@ public class Connessione extends Thread {
                 for (Monumento monumento : monumenti){
                     if(monumento.getComune().equalsIgnoreCase(parametro)) {
                         out.println(new JSONObject(monumento));
-                        out.flush();
                         corrispondenzeTrovate++;
                     }
                 }
@@ -146,7 +149,6 @@ public class Connessione extends Thread {
                 for (Monumento monumento : monumenti){
                     if(monumento.getProvincia().equalsIgnoreCase(parametro)) {
                         out.println(new JSONObject(monumento));
-                        out.flush();
                         corrispondenzeTrovate++;
                     }
                 }
@@ -163,7 +165,6 @@ public class Connessione extends Thread {
                 for (Monumento monumento : monumenti){
                     if(monumento.getRegione().equalsIgnoreCase(parametro)) {
                         out.println(new JSONObject(monumento));
-                        out.flush();
                         corrispondenzeTrovate++;
                     }
                 }
@@ -180,7 +181,6 @@ public class Connessione extends Thread {
                 for (Monumento monumento : monumenti){
                     if(monumento.getNome().equals(parametro)) {
                         out.println(new JSONObject(monumento));
-                        out.flush();
                         corrispondenzeTrovate++;
                     }
                 }
@@ -197,7 +197,6 @@ public class Connessione extends Thread {
                 for (Monumento monumento : monumenti){
                     if(monumento.getNome().contains(parametro)) {
                         out.println(new JSONObject(monumento));
-                        out.flush();
                         corrispondenzeTrovate++;
                     }
                 }
@@ -214,7 +213,6 @@ public class Connessione extends Thread {
                 for (Monumento monumento : monumenti){
                     if(monumento.getTipo().equals(parametro)) {
                         out.println(new JSONObject(monumento));
-                        out.flush();
                         corrispondenzeTrovate++;
                     }
                 }
@@ -231,7 +229,6 @@ public class Connessione extends Thread {
                 for (Monumento monumento : monumenti){
                     if(monumento.getAnnoInserimento().equals(Year.parse(parametro))) {
                         out.println(new JSONObject(monumento));
-                        out.flush();
                         corrispondenzeTrovate++;
                     }
                 }
@@ -245,14 +242,13 @@ public class Connessione extends Thread {
                 break;
 
             case GET_PER_ANNI:
-                String[] anni = parametro.split(" "); // O FACCIO COSÌ O DOVREI MANDARE UN'ARRAY DI PARAMETRI SUL JSON, FORSE È PIÙ COMODO COSÌ
+                String[] anni = parametro.split(" ");
                 Year anno1 = Year.parse(anni[0]);
                 Year anno2 = Year.parse(anni[1]);
 
                 for (Monumento monumento : monumenti){
                     if(monumento.getAnnoInserimento().compareTo(anno1) >= 0 && monumento.getAnnoInserimento().compareTo(anno2) <= 0) {
                         out.println(new JSONObject(monumento));
-                        out.flush();
                         corrispondenzeTrovate++;
                     }
                 }
@@ -263,18 +259,16 @@ public class Connessione extends Thread {
                 }
                 out.println(FINE_TRASMISSIONE);
                 out.flush();
-
                 break;
 
             case GET_TRA_LONGITUDINI:
-                String[] longitudini = parametro.split(" "); // O FACCIO COSÌ O DOVREI MANDARE UN'ARRAY DI PARAMETRI SUL JSON, FORSE È PIÙ COMODO COSÌ
+                String[] longitudini = parametro.split(" ");
                 longitudine1 = Double.parseDouble(longitudini[0]);
                 longitudine2 = Double.parseDouble(longitudini[1]);
 
                 for (Monumento monumento : monumenti){
                     if(monumento.getLongitudine() >= longitudine1 && monumento.getLongitudine() <= longitudine2) {
                         out.println(new JSONObject(monumento));
-                        out.flush();
                         corrispondenzeTrovate++;
                     }
                 }
@@ -285,7 +279,6 @@ public class Connessione extends Thread {
                 }
                 out.println(FINE_TRASMISSIONE);
                 out.flush();
-
                 break;
 
             case GET_TRA_LATITUDINI:
@@ -296,7 +289,6 @@ public class Connessione extends Thread {
                 for (Monumento monumento : monumenti){
                     if(monumento.getLatitudine() >= latitudine1 && monumento.getLatitudine() <= latitudine2) {
                         out.println(new JSONObject(monumento));
-                        out.flush();
                         corrispondenzeTrovate++;
                     }
                 }
@@ -307,7 +299,6 @@ public class Connessione extends Thread {
                 }
                 out.println(FINE_TRASMISSIONE);
                 out.flush();
-
                 break;
 
             case GET_TRA_LONGITUDINI_E_LATITUDINI:
@@ -322,7 +313,6 @@ public class Connessione extends Thread {
                 for (Monumento monumento : monumenti){
                     if(monumento.getLongitudine() >= longitudine1 && monumento.getLongitudine() <= longitudine2 && monumento.getLatitudine() >= latitudine1 && monumento.getLatitudine() <= latitudine2) {
                         out.println(new JSONObject(monumento));
-                        out.flush();
                         corrispondenzeTrovate++;
                     }
                 }
@@ -341,9 +331,10 @@ public class Connessione extends Thread {
                 System.out.println("Server: closed");
                 break;
         }
+
     }
 
-    public void chiudi(){ // Chiusura forzata dal gestore
+    public void chiudi(){ // Chiusura della connessione
         try {
             out.close();
             in.close();
