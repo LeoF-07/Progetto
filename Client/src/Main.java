@@ -42,11 +42,13 @@ public class Main{
             j.put("comando", "GET");
             j.put("parametro", "");
             out.println(j);
-            in.readLine(); // Legge il messaggio iniziale
+
+            System.out.println(in.readLine()); // Legge il messaggio iniziale
             String comandi = in.readLine(); // Legge una stringa contenente tutti i comandi
             String parametriPrevisti = in.readLine(); // Legge una stringa contenente il numero di parametri previsto per ogni comando
             String descrizioni = in.readLine(); // Legge una stringa contenente tutte le descrizioni per ogni comando
             attributiMonumento = in.readLine().split(";"); // Legge una stringa contenente gli attributi di un monumento
+
             GUI gui = new GUI(comandi.split(";"), parametriPrevisti.split(";"), descrizioni.split(";"), attributiMonumento);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -70,18 +72,22 @@ public class Main{
                 partiComando[1] = "";
             }
 
-            serializzaEInviaAlServer(partiComando[0], partiComando[1]);
+            try {
+                serializzaEInviaAlServer(partiComando[0], partiComando[1]);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         } while(!partiComando[0].equals("END"));
     }
 
-    public static ArrayList<String> inviaComando(String comando, String parametro){
+    public static ArrayList<String> inviaComando(String comando, String parametro) throws Exception {
         ArrayList<String> risposte = serializzaEInviaAlServer(comando, parametro);
         if(comando.equals("END")) System.exit(0);
         System.out.print("\nComando: ");
         return risposte;
     }
 
-    public static ArrayList<String> serializzaEInviaAlServer(String comando, String parametro){
+    public static ArrayList<String> serializzaEInviaAlServer(String comando, String parametro) throws Exception {
         JSONObject jsonComando = new JSONObject();
         jsonComando.put("comando", comando);
         jsonComando.put("parametro", parametro);
@@ -95,6 +101,7 @@ public class Main{
         ArrayList<String> risposte = new ArrayList<>();
         try {
             risposta = in.readLine();
+            if(risposta != null &&  risposta.startsWith("ERROR:")) throw new Exception(risposta);
             while(risposta != null && !risposta.equals("FINE")){
                 JSONObject jsonMonumento = new JSONObject(risposta);
 

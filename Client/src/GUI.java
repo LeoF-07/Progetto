@@ -9,7 +9,6 @@ import java.util.ArrayList;
 public class GUI extends JFrame {
 
     private JPanel comandoEParametro;
-    private JPanel tabella;
     private JTable tabellaMonumenti;
     private JScrollPane scrollPaneTabella;
     private JComboBox<String> selectComandi;
@@ -43,7 +42,7 @@ public class GUI extends JFrame {
         this.setLayout(null);
 
         selectComandi = new JComboBox<>(comandi);
-        selectComandi.setBounds(10, 80, 300, 20);
+        selectComandi.setBounds(20, 80, 300, 20);
 
         max = 0;
         for (String parametri : parametriPrevisti) if (Integer.parseInt(parametri) > max) max = Integer.parseInt(parametri);
@@ -56,11 +55,11 @@ public class GUI extends JFrame {
             parametri[i].setVisible(false);
         }
 
-        parametri[0].setBounds(360, 80, 300, 20);
+        parametri[0].setBounds(380, 80, 300, 20);
         parametri[0].setVisible(true);
 
         descrizione = new JTextArea(descrizioni[0]);
-        descrizione.setBounds(10, 130, 960, 50);
+        descrizione.setBounds(20, 130, 940, 50);
         descrizione.setEditable(false);
         // descrizione.setLineWrap(true);
 
@@ -78,7 +77,7 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int n = Integer.parseInt(parametriPrevisti[selectComandi.getSelectedIndex()]);
                 for(int i = 0; i < n; i++){
-                    parametri[i].setBounds(360 + (300 / n + 10) * i, 80, 300 / n, 20);
+                    parametri[i].setBounds(380 + (300 / n + 10) * i, 80, 300 / n, 20);
                     parametri[i].setText("Parametro");
                     parametri[i].setVisible(true);
                 }
@@ -96,11 +95,20 @@ public class GUI extends JFrame {
                     else parametro += parametri[i].getText();
                 }
 
-                risposte = Main.inviaComando((String) selectComandi.getSelectedItem(), parametro);
+                try {
+                    risposte = Main.inviaComando((String) selectComandi.getSelectedItem(), parametro);
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                    JOptionPane.showMessageDialog(invia, ex.getMessage());
+                    return;
+                }
+
                 String[][] data = new String[risposte.size()][attributiMonumento.length];
                 for(int i = 0; i < risposte.size(); i++) data[i] = risposte.get(i).split(";");
 
                 tabellaMonumenti = new JTable(data, attributiMonumento);
+                tabellaMonumenti.getTableHeader().setPreferredSize(new Dimension(0, 50));
+                tabellaMonumenti.getTableHeader().setBackground(Color.PINK);
 
                 scrollPaneTabella = new JScrollPane(tabellaMonumenti);
 
@@ -120,7 +128,7 @@ public class GUI extends JFrame {
         comandoEParametro.add(descrizione);
         comandoEParametro.add(invia);
         comandoEParametro.setBounds(0, 0, 1000, 300);
-        comandoEParametro.setBackground(Color.ORANGE);
+        comandoEParametro.setBackground(Color.pink);
 
         this.add(comandoEParametro);
 

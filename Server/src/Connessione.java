@@ -103,23 +103,40 @@ public class Connessione extends Thread {
         double latitudine1;
         double latitudine2;
 
+        int corrispondenzeTrovate = 0;
+
         switch (comando){
             case GET_ROW:
-                int riga = Integer.parseInt(parametro);
-                //out.println(monumenti.get(riga));
-                out.println(new JSONObject(monumenti.get(riga)));
-                out.flush();
-                out.println(FINE_TRASMISSIONE);
-                out.flush();
+                int riga;
+                try{
+                    riga = Integer.parseInt(parametro);
+                    out.println(new JSONObject(monumenti.get(riga)));
+                    out.flush();
+                    out.println(FINE_TRASMISSIONE);
+                    out.flush();
+                }catch (NumberFormatException ex){
+                    out.println("ERROR: Parametro formattato male");
+                    out.flush();
+                    return;
+                }catch (IndexOutOfBoundsException ex){
+                    out.println("ERROR: Non esiste la riga inserita");
+                    out.flush();
+                    return;
+                }
                 break;
 
             case GET_PER_COMUNE:
                 for (Monumento monumento : monumenti){
                     if(monumento.getComune().equalsIgnoreCase(parametro)) {
-                        //out.println(monumento);
                         out.println(new JSONObject(monumento));
                         out.flush();
+                        corrispondenzeTrovate++;
                     }
+                }
+                if(corrispondenzeTrovate == 0){
+                    out.println(Comando.GET_PER_COMUNE.errore);
+                    out.flush();
+                    return;
                 }
                 out.println(FINE_TRASMISSIONE);
                 out.flush();
@@ -128,10 +145,15 @@ public class Connessione extends Thread {
             case GET_PER_PROVINCIA:
                 for (Monumento monumento : monumenti){
                     if(monumento.getProvincia().equalsIgnoreCase(parametro)) {
-                        //out.println(monumento);
                         out.println(new JSONObject(monumento));
                         out.flush();
+                        corrispondenzeTrovate++;
                     }
+                }
+                if(corrispondenzeTrovate == 0){
+                    out.println(Comando.GET_PER_PROVINCIA.errore);
+                    out.flush();
+                    return;
                 }
                 out.println(FINE_TRASMISSIONE);
                 out.flush();
@@ -140,10 +162,15 @@ public class Connessione extends Thread {
             case GET_PER_REGIONE:
                 for (Monumento monumento : monumenti){
                     if(monumento.getRegione().equalsIgnoreCase(parametro)) {
-                        //out.println(monumento);
                         out.println(new JSONObject(monumento));
                         out.flush();
+                        corrispondenzeTrovate++;
                     }
+                }
+                if(corrispondenzeTrovate == 0){
+                    out.println(Comando.GET_PER_REGIONE.errore);
+                    out.flush();
+                    return;
                 }
                 out.println(FINE_TRASMISSIONE);
                 out.flush();
@@ -152,10 +179,15 @@ public class Connessione extends Thread {
             case GET_PER_NOME:
                 for (Monumento monumento : monumenti){
                     if(monumento.getNome().equals(parametro)) {
-                        //out.println(monumento);
                         out.println(new JSONObject(monumento));
                         out.flush();
+                        corrispondenzeTrovate++;
                     }
+                }
+                if(corrispondenzeTrovate == 0){
+                    out.println(Comando.GET_PER_NOME.errore);
+                    out.flush();
+                    return;
                 }
                 out.println(FINE_TRASMISSIONE);
                 out.flush();
@@ -164,10 +196,15 @@ public class Connessione extends Thread {
             case GET_PER_NOME_PARZIALE:
                 for (Monumento monumento : monumenti){
                     if(monumento.getNome().contains(parametro)) {
-                        //out.println(monumento);
                         out.println(new JSONObject(monumento));
                         out.flush();
+                        corrispondenzeTrovate++;
                     }
+                }
+                if(corrispondenzeTrovate == 0){
+                    out.println(Comando.GET_PER_NOME_PARZIALE.errore);
+                    out.flush();
+                    return;
                 }
                 out.println(FINE_TRASMISSIONE);
                 out.flush();
@@ -176,10 +213,15 @@ public class Connessione extends Thread {
             case GET_PER_TIPO:
                 for (Monumento monumento : monumenti){
                     if(monumento.getTipo().equals(parametro)) {
-                        //out.println(monumento);
                         out.println(new JSONObject(monumento));
                         out.flush();
+                        corrispondenzeTrovate++;
                     }
+                }
+                if(corrispondenzeTrovate == 0){
+                    out.println(Comando.GET_PER_TIPO.errore);
+                    out.flush();
+                    return;
                 }
                 out.println(FINE_TRASMISSIONE);
                 out.flush();
@@ -188,10 +230,15 @@ public class Connessione extends Thread {
             case GET_PER_ANNO:
                 for (Monumento monumento : monumenti){
                     if(monumento.getAnnoInserimento().equals(Year.parse(parametro))) {
-                        //out.println(monumento);
                         out.println(new JSONObject(monumento));
                         out.flush();
+                        corrispondenzeTrovate++;
                     }
+                }
+                if(corrispondenzeTrovate == 0){
+                    out.println(Comando.GET_PER_ANNO.errore);
+                    out.flush();
+                    return;
                 }
                 out.println(FINE_TRASMISSIONE);
                 out.flush();
@@ -204,10 +251,15 @@ public class Connessione extends Thread {
 
                 for (Monumento monumento : monumenti){
                     if(monumento.getAnnoInserimento().compareTo(anno1) >= 0 && monumento.getAnnoInserimento().compareTo(anno2) <= 0) {
-                        //out.println(monumento);
                         out.println(new JSONObject(monumento));
                         out.flush();
+                        corrispondenzeTrovate++;
                     }
+                }
+                if(corrispondenzeTrovate == 0){
+                    out.println(Comando.GET_PER_ANNI.errore);
+                    out.flush();
+                    return;
                 }
                 out.println(FINE_TRASMISSIONE);
                 out.flush();
@@ -221,10 +273,15 @@ public class Connessione extends Thread {
 
                 for (Monumento monumento : monumenti){
                     if(monumento.getLongitudine() >= longitudine1 && monumento.getLongitudine() <= longitudine2) {
-                        //out.println(monumento);
                         out.println(new JSONObject(monumento));
                         out.flush();
+                        corrispondenzeTrovate++;
                     }
+                }
+                if(corrispondenzeTrovate == 0){
+                    out.println(Comando.GET_TRA_LONGITUDINI.errore);
+                    out.flush();
+                    return;
                 }
                 out.println(FINE_TRASMISSIONE);
                 out.flush();
@@ -238,10 +295,15 @@ public class Connessione extends Thread {
 
                 for (Monumento monumento : monumenti){
                     if(monumento.getLatitudine() >= latitudine1 && monumento.getLatitudine() <= latitudine2) {
-                        //out.println(monumento);
                         out.println(new JSONObject(monumento));
                         out.flush();
+                        corrispondenzeTrovate++;
                     }
+                }
+                if(corrispondenzeTrovate == 0){
+                    out.println(Comando.GET_TRA_LATITUDINI.errore);
+                    out.flush();
+                    return;
                 }
                 out.println(FINE_TRASMISSIONE);
                 out.flush();
@@ -259,10 +321,15 @@ public class Connessione extends Thread {
 
                 for (Monumento monumento : monumenti){
                     if(monumento.getLongitudine() >= longitudine1 && monumento.getLongitudine() <= longitudine2 && monumento.getLatitudine() >= latitudine1 && monumento.getLatitudine() <= latitudine2) {
-                        //out.println(monumento);
                         out.println(new JSONObject(monumento));
                         out.flush();
+                        corrispondenzeTrovate++;
                     }
+                }
+                if(corrispondenzeTrovate == 0){
+                    out.println(Comando.GET_TRA_LONGITUDINI_E_LATITUDINI.errore);
+                    out.flush();
+                    return;
                 }
                 out.println(FINE_TRASMISSIONE);
                 out.flush();
