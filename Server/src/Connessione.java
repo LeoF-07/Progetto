@@ -69,21 +69,24 @@ public class Connessione extends Thread {
         if(nomeComando.equals("GET")){
             String comandi = "";
             String parametriPrevisti = "";
+            String descrizioni = "";
             for(int i = 0; i < Comando.values().length; i++) {
                 if(i != Comando.values().length - 1) {
-                    comandi += Comando.values()[i].nome + " ";
-                    parametriPrevisti += Comando.values()[i].parametriPrevisti + " ";
+                    comandi += Comando.values()[i].nome + ";";
+                    parametriPrevisti += Comando.values()[i].parametriPrevisti + ";";
+                    descrizioni += Comando.values()[i].descrizione + ";";
                 }
                 else {
                     comandi += Comando.values()[i].nome;
                     parametriPrevisti += Comando.values()[i].parametriPrevisti;
+                    descrizioni += Comando.values()[i].descrizione + ";";
                 }
-
             }
             out.println(comandi);
             out.flush();
             out.println(parametriPrevisti);
             out.flush();
+            out.println(descrizioni);
             return;
         }
 

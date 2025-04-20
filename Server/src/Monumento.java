@@ -15,6 +15,10 @@ public class Monumento {
     private double longitudine;
     private double latitudine;
 
+    public String getParametri(){
+        return "comune;provincia;regione;nome;tipo;annoInserimento;dataEOraInserimento;identificatoreOpenStreetMap;longitudine;latitudine";
+    }
+
     public Monumento(String comune, String provincia, String regione, String nome, String tipo, Year annoInserimento, LocalDateTime dataEOraInserimento, String identificatoreOpenStreetMap, double longitudine, double latitudine) {
         this.comune = comune;
         this.provincia = provincia;

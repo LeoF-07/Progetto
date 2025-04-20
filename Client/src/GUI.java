@@ -10,14 +10,13 @@ public class GUI extends JFrame {
     private JTable tabellaMonumenti;
     private JScrollPane scrollPaneTabella;
     private JComboBox<String> selectComandi;
-
     private JTextField[] parametri;
-
+    private JTextArea descrizione;
     private JButton invia;
 
     private int max;
 
-    public GUI(String[] comandi, String[] parametriPrevisti){
+    public GUI(String[] comandi, String[] parametriPrevisti, String[] descrizioni){
         this.setLayout(null);
 
         selectComandi = new JComboBox<>(comandi);
@@ -35,6 +34,11 @@ public class GUI extends JFrame {
         parametri[0].setBounds(360, 80, 300, 20);
         parametri[0].setVisible(true);
 
+        descrizione = new JTextArea(descrizioni[0]);
+        descrizione.setBounds(10, 130, 960, 50);
+        descrizione.setEditable(false);
+        // descrizione.setLineWrap(true);
+
         invia = new JButton("Invia comando");
         invia.setBounds(800, 80, 150, 20);
 
@@ -47,6 +51,7 @@ public class GUI extends JFrame {
                     parametri[i].setVisible(true);
                 }
                 for(int i = n; i < max; i++) parametri[i].setVisible(false);
+                descrizione.setText(descrizioni[selectComandi.getSelectedIndex()]);
             }
         });
 
@@ -69,9 +74,9 @@ public class GUI extends JFrame {
 
         for(int i = 0; i < max; i++) comandoEParametro.add(parametri[i]);
 
+        comandoEParametro.add(descrizione);
         comandoEParametro.add(invia);
-        comandoEParametro.setBackground(Color.BLUE);
-        comandoEParametro.setBounds(0, 0, 1000, 200);
+        comandoEParametro.setBounds(0, 0, 1000, 300);
 
         this.add(comandoEParametro);
 
