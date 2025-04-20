@@ -46,7 +46,7 @@ public class Main{
             String comandi = in.readLine(); // Legge una stringa contenente tutti i comandi
             String parametriPrevisti = in.readLine(); // Legge una stringa contenente il numero di parametri previsto per ogni comando
             String descrizioni = in.readLine(); // Legge una stringa contenente tutte le descrizioni per ogni comando
-            attributiMonumento = in.readLine().split(";");
+            attributiMonumento = in.readLine().split(";"); // Legge una stringa contenente gli attributi di un monumento
             GUI gui = new GUI(comandi.split(";"), parametriPrevisti.split(";"), descrizioni.split(";"), attributiMonumento);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -100,7 +100,7 @@ public class Main{
 
                 String monumento = "";
                 for (String attributo : attributiMonumento) monumento += jsonMonumento.get(attributo) + ";";
-                System.out.format("Risposta dal server: Monumento: %s%n", monumento);
+                System.out.format("Risposta dal server: Monumento: %s%n", jsonMonumento);
                 risposte.add(monumento);
 
                 risposta = in.readLine();
