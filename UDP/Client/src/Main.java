@@ -1,6 +1,5 @@
 import java.io.*;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -12,42 +11,58 @@ public class Main{
     final static String nomeServer = "localhost";
     final static int portaServer = 1050;
 
-    private static BufferedReader in;
-    private static PrintWriter out;
+    private static byte[] in;
+    private static byte[] out;
+
+    private static DatagramPacket pktIn;
+    private static DatagramPacket pktOut;
+
+    private static DatagramSocket serverSocket;
+    private static InetAddress ipServer;
 
     private static String[] attributiMonumento;
 
     public static void main(String[] args) {
         System.out.println("Connessione al server in corso...");
-        try (Socket sck = new Socket(nomeServer, portaServer)) {
-            String rem = sck.getRemoteSocketAddress().toString();
-            String loc = sck.getLocalSocketAddress().toString();
-            System.out.format("Server (remoto): %s%n", rem);
-            System.out.format("Client (client): %s%n", loc);
+        try (DatagramSocket sck = new DatagramSocket()) {
             comunica(sck);
             System.exit(0);
-        } catch (UnknownHostException e) {
-            System.err.format("Nome di server non valido: %s%n", e.getMessage());
         } catch (IOException e) {
             System.err.format("Errore durante la comunicazione con il server: %s%n", e.getMessage());
         }
     }
 
-    private static void comunica(Socket sck) {
+    private static void comunica(DatagramSocket sck) {
+        serverSocket = sck;
+
         try {
-            in = new BufferedReader(new InputStreamReader(sck.getInputStream(), StandardCharsets.UTF_8));
-            out = new PrintWriter(new OutputStreamWriter(sck.getOutputStream(), StandardCharsets.UTF_8), true);
+            in = new byte[1024];
+
+            ipServer = InetAddress.getLocalHost();
+
+            out = ("ciao").getBytes();
+            pktOut = new DatagramPacket(out, out.length, ipServer, portaServer);
+            sck.send(pktOut);
+
+            pktIn = new DatagramPacket(in, in.length);
+            sck.receive(pktIn);
+            System.out.println(new String(pktIn.getData(), 0, pktIn.getLength(), StandardCharsets.UTF_8)); // Legge il messaggio iniziale
 
             JSONObject j = new JSONObject();
             j.put("comando", "GET");
             j.put("parametro", "");
-            out.println(j);
+            out = j.toString().getBytes();
+            pktOut = new DatagramPacket(out, out.length, ipServer, portaServer);
+            sck.send(pktOut);
 
-            System.out.println(in.readLine()); // Legge il messaggio iniziale
-            String comandi = in.readLine(); // Legge una stringa contenente tutti i comandi
-            String parametriPrevisti = in.readLine(); // Legge una stringa contenente il numero di parametri previsto per ogni comando
-            String descrizioni = in.readLine(); // Legge una stringa contenente tutte le descrizioni per ogni comando
-            attributiMonumento = in.readLine().split(";"); // Legge una stringa contenente gli attributi di un monumento
+            sck.receive(pktIn);
+            String comandi = new String(pktIn.getData(), 0, pktIn.getLength(), StandardCharsets.UTF_8); // Legge una stringa contenente tutti i comandi
+            sck.receive(pktIn);
+            String parametriPrevisti = new String(pktIn.getData(), 0, pktIn.getLength(), StandardCharsets.UTF_8); // Legge una stringa contenente il numero di parametri previsto per ogni comando
+            sck.receive(pktIn);
+            String descrizioni = new String(pktIn.getData(), 0, pktIn.getLength(), StandardCharsets.UTF_8); // Legge una stringa contenente tutte le descrizioni per ogni comando
+            sck.receive(pktIn);
+            attributiMonumento = new String(pktIn.getData(), 0, pktIn.getLength(), StandardCharsets.UTF_8).split(";"); // Legge una stringa contenente gli attributi di un monumento
 
             GUI gui = new GUI(comandi.split(";"), parametriPrevisti.split(";"), descrizioni.split(";"), attributiMonumento);
         } catch (IOException e) {
@@ -96,7 +111,9 @@ public class Main{
         jsonComando.put("parametro", parametro);
 
         System.out.format("Invio al server: %s%n", jsonComando);
-        out.println(jsonComando);
+        out = jsonComando.toString().getBytes();
+        pktOut = new DatagramPacket(out, out.length, ipServer, portaServer);
+        serverSocket.send(pktOut);
 
         System.out.println("In attesa di risposta dal server...");
 
@@ -104,9 +121,11 @@ public class Main{
         ArrayList<String> risposte = new ArrayList<>();
 
         try {
-            risposta = in.readLine();
-            if(risposta != null &&  risposta.startsWith("ERROR:")) throw new Exception(risposta);
-            while(risposta != null && !risposta.equals("FINE")){
+            serverSocket.receive(pktIn);
+            risposta = new String(pktIn.getData(), 0, pktIn.getLength(), StandardCharsets.UTF_8);
+
+            if(risposta.startsWith("ERROR:")) throw new Exception(risposta);
+            while(!risposta.equals("FINE")){
                 JSONObject jsonMonumento = new JSONObject(risposta);
 
                 String monumento = "";
@@ -114,7 +133,8 @@ public class Main{
                 System.out.format("Risposta dal server: Monumento: %s%n", jsonMonumento);
                 risposte.add(monumento);
 
-                risposta = in.readLine();
+                serverSocket.receive(pktIn);
+                risposta = new String(pktIn.getData(), 0, pktIn.getLength(), StandardCharsets.UTF_8);
             }
         } catch (IOException e) {
             throw new ServerChiusoException("Il Server è stato chiuso o riavviato");
