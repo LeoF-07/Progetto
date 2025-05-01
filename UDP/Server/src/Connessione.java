@@ -31,27 +31,25 @@ public class Connessione {
     }
 
     public void comunica() {
-        //while(true){
-            in = new byte[1024];
+        in = new byte[1024];
 
-            pktIn = new DatagramPacket(in, in.length);
-            try {
-                serverSocket.receive(pktIn);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            clientSocket = pktIn.getSocketAddress();
+        pktIn = new DatagramPacket(in, in.length);
+        try {
+            serverSocket.receive(pktIn);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        clientSocket = pktIn.getSocketAddress();
 
-            out = ("Hello (END to end connection)").getBytes(StandardCharsets.UTF_8);
-            pktOut = new DatagramPacket(out, out.length, clientSocket);
-            try {
-                serverSocket.send(pktOut);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        out = ("Hello (END to end connection)").getBytes(StandardCharsets.UTF_8);
+        pktOut = new DatagramPacket(out, out.length, clientSocket);
+        try {
+            serverSocket.send(pktOut);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-            esegui();
-        //}
+        esegui();
     }
 
     private void esegui(){
@@ -401,22 +399,25 @@ public class Connessione {
 
             case END:
                 System.out.println("Server: closing...");
-                //chiudi();
                 System.out.println("Server: closed");
+                chiudi();
                 break;
         }
 
     }
 
-    /*public void chiudi(){ // Chiusura della connessione
+    public void chiudi(){ // Chiusura della connessione
         try {
-            out.close();
-            in.close();
-            clientSocket.close();
+            out = FINE_TRASMISSIONE.getBytes();
+            pktOut = new DatagramPacket(out, out.length, clientSocket);
+            serverSocket.send(pktOut);
+            out = FINE_TRASMISSIONE.getBytes();
+            pktOut = new DatagramPacket(out, out.length, clientSocket);
+            serverSocket.send(pktOut);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }*/
+    }
 
     public ArrayList<Monumento> prelevaDati(){
         ArrayList<Monumento> monumenti = new ArrayList<>();

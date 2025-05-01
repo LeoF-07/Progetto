@@ -9,8 +9,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         ArrayList<Connessione> connessioni = new ArrayList<>();
 
-        try (DatagramSocket serverSocket = new DatagramSocket(PORT)) {
-            while(true){
+        while(true){
+            try (DatagramSocket serverSocket = new DatagramSocket(PORT)) {
                 Connessione connessione = new Connessione(serverSocket);
                 connessione.comunica();
             }
