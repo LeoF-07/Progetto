@@ -36,10 +36,12 @@ public class Connessione {
         pktIn = new DatagramPacket(in, in.length);
         try {
             serverSocket.receive(pktIn);
+            Main.gestore.setConnessione(this);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         clientSocket = pktIn.getSocketAddress();
+        System.out.println("Connessione avvenuta con: " + clientSocket);
 
         out = ("Hello (END to end connection)").getBytes(StandardCharsets.UTF_8);
         pktOut = new DatagramPacket(out, out.length, clientSocket);
@@ -141,9 +143,6 @@ public class Connessione {
                     out = (new JSONObject(monumenti.get(riga)).toString().getBytes());
                     pktOut = new DatagramPacket(out, out.length, clientSocket);
                     serverSocket.send(pktOut);
-                    out = FINE_TRASMISSIONE.getBytes();
-                    pktOut = new DatagramPacket(out, out.length, clientSocket);
-                    serverSocket.send(pktOut);
                 }catch (NumberFormatException ex){
                     out = ("ERROR: Parametro formattato male").getBytes();
                     pktOut = new DatagramPacket(out, out.length, clientSocket);
@@ -172,9 +171,6 @@ public class Connessione {
                     serverSocket.send(pktOut);
                     return;
                 }
-                out = FINE_TRASMISSIONE.getBytes();
-                pktOut = new DatagramPacket(out, out.length, clientSocket);
-                serverSocket.send(pktOut);
                 break;
 
             case GET_PER_PROVINCIA:
@@ -192,9 +188,6 @@ public class Connessione {
                     serverSocket.send(pktOut);
                     return;
                 }
-                out = FINE_TRASMISSIONE.getBytes();
-                pktOut = new DatagramPacket(out, out.length, clientSocket);
-                serverSocket.send(pktOut);
                 break;
 
             case GET_PER_REGIONE:
@@ -212,9 +205,6 @@ public class Connessione {
                     serverSocket.send(pktOut);
                     return;
                 }
-                out = FINE_TRASMISSIONE.getBytes();
-                pktOut = new DatagramPacket(out, out.length, clientSocket);
-                serverSocket.send(pktOut);
                 break;
 
             case GET_PER_NOME:
@@ -232,9 +222,6 @@ public class Connessione {
                     serverSocket.send(pktOut);
                     return;
                 }
-                out = FINE_TRASMISSIONE.getBytes();
-                pktOut = new DatagramPacket(out, out.length, clientSocket);
-                serverSocket.send(pktOut);
                 break;
 
             case GET_PER_NOME_PARZIALE:
@@ -252,9 +239,6 @@ public class Connessione {
                     serverSocket.send(pktOut);
                     return;
                 }
-                out = FINE_TRASMISSIONE.getBytes();
-                pktOut = new DatagramPacket(out, out.length, clientSocket);
-                serverSocket.send(pktOut);
                 break;
 
             case GET_PER_TIPO:
@@ -272,9 +256,6 @@ public class Connessione {
                     serverSocket.send(pktOut);
                     return;
                 }
-                out = FINE_TRASMISSIONE.getBytes();
-                pktOut = new DatagramPacket(out, out.length, clientSocket);
-                serverSocket.send(pktOut);
                 break;
 
             case GET_PER_ANNO:
@@ -292,9 +273,6 @@ public class Connessione {
                     serverSocket.send(pktOut);
                     return;
                 }
-                out = FINE_TRASMISSIONE.getBytes();
-                pktOut = new DatagramPacket(out, out.length, clientSocket);
-                serverSocket.send(pktOut);
                 break;
 
             case GET_PER_ANNI:
@@ -316,9 +294,6 @@ public class Connessione {
                     serverSocket.send(pktOut);
                     return;
                 }
-                out = FINE_TRASMISSIONE.getBytes();
-                pktOut = new DatagramPacket(out, out.length, clientSocket);
-                serverSocket.send(pktOut);
                 break;
 
             case GET_TRA_LONGITUDINI:
@@ -340,9 +315,6 @@ public class Connessione {
                     serverSocket.send(pktOut);
                     return;
                 }
-                out = FINE_TRASMISSIONE.getBytes();
-                pktOut = new DatagramPacket(out, out.length, clientSocket);
-                serverSocket.send(pktOut);
                 break;
 
             case GET_TRA_LATITUDINI:
@@ -364,9 +336,6 @@ public class Connessione {
                     serverSocket.send(pktOut);
                     return;
                 }
-                out = FINE_TRASMISSIONE.getBytes();
-                pktOut = new DatagramPacket(out, out.length, clientSocket);
-                serverSocket.send(pktOut);
                 break;
 
             case GET_TRA_LONGITUDINI_E_LATITUDINI:
@@ -392,17 +361,19 @@ public class Connessione {
                     serverSocket.send(pktOut);
                     return;
                 }
-                out = FINE_TRASMISSIONE.getBytes();
-                pktOut = new DatagramPacket(out, out.length, clientSocket);
-                serverSocket.send(pktOut);
                 break;
 
             case END:
+                Main.gestore.setConnessione(null);
                 System.out.println("Server: closing...");
                 System.out.println("Server: closed");
                 chiudi();
-                break;
+                return;
         }
+
+        out = FINE_TRASMISSIONE.getBytes();
+        pktOut = new DatagramPacket(out, out.length, clientSocket);
+        serverSocket.send(pktOut);
 
     }
 

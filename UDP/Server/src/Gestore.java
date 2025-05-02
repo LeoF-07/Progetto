@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -7,11 +6,9 @@ import java.util.Scanner;
 
 public class Gestore extends Thread {
 
-    private ArrayList<Connessione> connessioni;
+    private Connessione connessione;
 
-    public Gestore(ArrayList<Connessione> connessioni){
-        this.connessioni = connessioni;
-
+    public Gestore(){
         JFrame jFrame = new JFrame("Chiusura connessioni");
         jFrame.setLayout(null);
         jFrame.setSize(500, 500);
@@ -24,8 +21,11 @@ public class Gestore extends Thread {
         jButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for(Connessione connessione : connessioni) connessione.chiudi();
-                System.out.println("Chiusura forzata Server");
+                try{
+                    connessione.chiudi();
+                }catch (NullPointerException ex){
+
+                }
                 System.exit(0);
             }
         });
@@ -39,11 +39,18 @@ public class Gestore extends Thread {
         System.out.println("Gestore delle connessioni\nDigita STOP in qualsiasi momento per spegnere il Server\n");
         while(true){
             if(new Scanner(System.in).nextLine().equals("STOP")){
-                for(Connessione connessione : connessioni) connessione.chiudi();
-                System.out.println("Chiusura forzata Server");
+                try{
+                    connessione.chiudi();
+                }catch (NullPointerException ex){
+
+                }
                 System.exit(0);
             }
         }
+    }
+
+    public void setConnessione(Connessione connessione) {
+        this.connessione = connessione;
     }
 
 }

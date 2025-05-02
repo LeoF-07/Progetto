@@ -40,7 +40,7 @@ public class Main{
 
             ipServer = InetAddress.getLocalHost();
 
-            out = ("ciao").getBytes();
+            out = ("Avvia connessione").getBytes();
             pktOut = new DatagramPacket(out, out.length, ipServer, portaServer);
             sck.send(pktOut);
 

@@ -57,7 +57,6 @@ public class Connessione extends Thread {
 
                 eseguiComando(comando, parametro);
             } catch (IOException e) {
-                System.out.println("È stata eseguita avvenuta la chiusura forzata del Server");
                 return;
             }
         } while(!partiComando.getString("comando").equals(Comando.END.nome));
@@ -116,8 +115,6 @@ public class Connessione extends Thread {
                 try{
                     riga = Integer.parseInt(parametro);
                     out.println(new JSONObject(monumenti.get(riga)));
-                    out.println(FINE_TRASMISSIONE);
-                    out.flush();
                 }catch (NumberFormatException ex){
                     out.println("ERROR: Parametro formattato male");
                     out.flush();
@@ -141,8 +138,6 @@ public class Connessione extends Thread {
                     out.flush();
                     return;
                 }
-                out.println(FINE_TRASMISSIONE);
-                out.flush();
                 break;
 
             case GET_PER_PROVINCIA:
@@ -157,8 +152,6 @@ public class Connessione extends Thread {
                     out.flush();
                     return;
                 }
-                out.println(FINE_TRASMISSIONE);
-                out.flush();
                 break;
 
             case GET_PER_REGIONE:
@@ -173,8 +166,6 @@ public class Connessione extends Thread {
                     out.flush();
                     return;
                 }
-                out.println(FINE_TRASMISSIONE);
-                out.flush();
                 break;
 
             case GET_PER_NOME:
@@ -189,8 +180,6 @@ public class Connessione extends Thread {
                     out.flush();
                     return;
                 }
-                out.println(FINE_TRASMISSIONE);
-                out.flush();
                 break;
 
             case GET_PER_NOME_PARZIALE:
@@ -205,8 +194,6 @@ public class Connessione extends Thread {
                     out.flush();
                     return;
                 }
-                out.println(FINE_TRASMISSIONE);
-                out.flush();
                 break;
 
             case GET_PER_TIPO:
@@ -221,8 +208,6 @@ public class Connessione extends Thread {
                     out.flush();
                     return;
                 }
-                out.println(FINE_TRASMISSIONE);
-                out.flush();
                 break;
 
             case GET_PER_ANNO:
@@ -237,8 +222,6 @@ public class Connessione extends Thread {
                     out.flush();
                     return;
                 }
-                out.println(FINE_TRASMISSIONE);
-                out.flush();
                 break;
 
             case GET_PER_ANNI:
@@ -257,8 +240,6 @@ public class Connessione extends Thread {
                     out.flush();
                     return;
                 }
-                out.println(FINE_TRASMISSIONE);
-                out.flush();
                 break;
 
             case GET_TRA_LONGITUDINI:
@@ -277,8 +258,6 @@ public class Connessione extends Thread {
                     out.flush();
                     return;
                 }
-                out.println(FINE_TRASMISSIONE);
-                out.flush();
                 break;
 
             case GET_TRA_LATITUDINI:
@@ -297,8 +276,6 @@ public class Connessione extends Thread {
                     out.flush();
                     return;
                 }
-                out.println(FINE_TRASMISSIONE);
-                out.flush();
                 break;
 
             case GET_TRA_LONGITUDINI_E_LATITUDINI:
@@ -321,16 +298,17 @@ public class Connessione extends Thread {
                     out.flush();
                     return;
                 }
-                out.println(FINE_TRASMISSIONE);
-                out.flush();
                 break;
 
             case END:
                 System.out.println("Server: closing...");
                 chiudi();
                 System.out.println("Server: closed");
-                break;
+                return;
         }
+
+        out.println(FINE_TRASMISSIONE);
+        out.flush();
 
     }
 

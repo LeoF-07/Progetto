@@ -107,7 +107,8 @@ public class GUI extends JFrame {
                 scrollPaneTabella = new JScrollPane(tabellaMonumenti);
 
                 frameTabella = new JFrame("Risposta");
-                frameTabella.setBounds(80, 80, 1800, 800);
+                frameTabella.setSize(1800, 800);
+                frameTabella.setLocationRelativeTo(null);
                 frameTabella.setVisible(true);
                 frameTabella.add(scrollPaneTabella);
             }
@@ -127,7 +128,8 @@ public class GUI extends JFrame {
         this.add(comandoEParametro);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setBounds(80, 80, 1000, 300);
+        this.setSize(1000, 300);
+        this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setVisible(true);
     }
