@@ -17,12 +17,12 @@ Applicazione Client-Server per la consultazione da remoto di informazioni relati
 
 ## Esecuzione
 
-1. Avvia il Server.
-2. Avvia il Client.
+1. Avvia il Server
+2. Avvia il Client
 
 ## Funzionamento
 
-Il Server dispone del file CSV contenente tutti i Monumenti italiani  
+Il Server dispone del file CSV contenente tutti i Monumenti italiani.  
 Il Client, munito di interfaccia grafica, comunica con il Server per consultare informazioni relative ai Monumenti.  
   
 Il protocollo di comunicazione Client-Server è descritto nel file Relazione.docx presente nella repository
