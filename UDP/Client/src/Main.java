@@ -82,7 +82,7 @@ public class Main{
             partiComando[0] = split[0];
             try{
                 partiComando[1] = split[1];
-                for(int i = 2; i < split.length; i++) partiComando[1] += " " + split[i];
+                for(int i = 2; i < split.length; i++) partiComando[1] += ";" + split[i];
             } catch (ArrayIndexOutOfBoundsException e){
                 partiComando[1] = "";
             }

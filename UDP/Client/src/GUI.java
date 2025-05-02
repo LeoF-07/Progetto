@@ -74,7 +74,7 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String parametro = "";
                 for(int i = 0; i < Integer.parseInt(parametriPrevisti[selectComandi.getSelectedIndex()]); i++){
-                    if(i != Integer.parseInt(parametriPrevisti[selectComandi.getSelectedIndex()]) - 1) parametro += parametri[i].getText() + " ";
+                    if(i != Integer.parseInt(parametriPrevisti[selectComandi.getSelectedIndex()]) - 1) parametro += parametri[i].getText() + ";";
                     else parametro += parametri[i].getText();
                 }
 

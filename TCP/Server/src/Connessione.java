@@ -225,7 +225,7 @@ public class Connessione extends Thread {
                 break;
 
             case GET_PER_ANNI:
-                String[] anni = parametro.split(" ");
+                String[] anni = parametro.split(";");
                 Year anno1 = Year.parse(anni[0]);
                 Year anno2 = Year.parse(anni[1]);
 
@@ -261,7 +261,7 @@ public class Connessione extends Thread {
                 break;
 
             case GET_TRA_LATITUDINI:
-                String[] latitudini = parametro.split(" "); // O FACCIO COSÌ O DOVREI MANDARE UN'ARRAY DI PARAMETRI SUL JSON, FORSE È PIÙ COMODO COSÌ
+                String[] latitudini = parametro.split(";");
                 latitudine1 = Double.parseDouble(latitudini[0]);
                 latitudine2 = Double.parseDouble(latitudini[1]);
 
@@ -279,7 +279,7 @@ public class Connessione extends Thread {
                 break;
 
             case GET_TRA_LONGITUDINI_E_LATITUDINI:
-                String[] longitudiniELatidudini = parametro.split(" ");
+                String[] longitudiniELatidudini = parametro.split(";");
                 longitudine1 = Double.parseDouble(longitudiniELatidudini[0]);
                 longitudine2 = Double.parseDouble(longitudiniELatidudini[1]);
                 latitudine1 = Double.parseDouble(longitudiniELatidudini[2]);
