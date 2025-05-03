@@ -65,11 +65,11 @@ public class Main{
 
             partiComando = new String[2];
             partiComando[0] = split[0];
-            try{
-                partiComando[1] = split[1];
-                for(int i = 2; i < split.length; i++) partiComando[1] += ";" + split[i];
-            } catch (ArrayIndexOutOfBoundsException e){
-                partiComando[1] = "";
+
+            if(split.length == 1) partiComando[1] = "";
+            else {
+                partiComando[1] = comando.substring(split[0].length() + 1);
+                partiComando[1] = partiComando[1].replace("; ", ";");
             }
 
             try {

@@ -93,7 +93,7 @@ public class GUI extends JFrame {
                 } catch (Exception ex) {
                     System.out.println(ex.getMessage());
                     JOptionPane.showMessageDialog(invia, ex.getMessage());
-                    System.out.println("\nComando: ");
+                    System.out.print("\nComando: ");
                     return;
                 }
 

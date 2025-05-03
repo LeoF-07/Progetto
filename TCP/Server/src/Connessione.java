@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class Connessione extends Thread {
@@ -47,7 +48,7 @@ public class Connessione extends Thread {
     }
 
     private void esegui(){
-        JSONObject partiComando;
+        JSONObject partiComando = null;
         do {
             try {
                 partiComando = new JSONObject(in.readLine());
@@ -58,13 +59,22 @@ public class Connessione extends Thread {
                 eseguiComando(comando, parametro);
             } catch (IOException e) {
                 return;
+            } catch (DateTimeParseException e){
+                out.println("ERROR: Anno formattato male");
+                out.flush();
+            } catch (NumberFormatException e){
+                out.println("ERROR: Numero formattato male");
+                out.flush();
+            } catch (Exception e){
+                out.println("ERROR: Eccezione");
+                out.flush();
             }
         } while(!partiComando.getString("comando").equals(Comando.END.nome));
 
         System.out.println("\nDigita STOP in qualsiasi momento per spegnere il Server\n");
     }
 
-    public void eseguiComando(String nomeComando, String parametro){
+    public void eseguiComando(String nomeComando, String parametro) throws Exception {
         if(nomeComando.equals("GET")){
             String comandi = "";
             String parametriPrevisti = "";
@@ -115,11 +125,7 @@ public class Connessione extends Thread {
                 try{
                     riga = Integer.parseInt(parametro);
                     out.println(new JSONObject(monumenti.get(riga)));
-                }catch (NumberFormatException ex){
-                    out.println("ERROR: Parametro formattato male");
-                    out.flush();
-                    return;
-                }catch (IndexOutOfBoundsException ex){
+                } catch (IndexOutOfBoundsException ex){
                     out.println("ERROR: Non esiste la riga inserita");
                     out.flush();
                     return;
@@ -224,7 +230,7 @@ public class Connessione extends Thread {
                 }
                 break;
 
-            case GET_PER_ANNI:
+            case GET_TRA_ANNI:
                 String[] anni = parametro.split(";");
                 Year anno1 = Year.parse(anni[0]);
                 Year anno2 = Year.parse(anni[1]);
@@ -236,14 +242,14 @@ public class Connessione extends Thread {
                     }
                 }
                 if(corrispondenzeTrovate == 0){
-                    out.println(Comando.GET_PER_ANNI.errore);
+                    out.println(Comando.GET_TRA_ANNI.errore);
                     out.flush();
                     return;
                 }
                 break;
 
             case GET_TRA_LONGITUDINI:
-                String[] longitudini = parametro.split(" ");
+                String[] longitudini = parametro.split(";");
                 longitudine1 = Double.parseDouble(longitudini[0]);
                 longitudine2 = Double.parseDouble(longitudini[1]);
 
@@ -309,7 +315,6 @@ public class Connessione extends Thread {
 
         out.println(FINE_TRASMISSIONE);
         out.flush();
-
     }
 
     public void chiudi(){ // Chiusura della connessione

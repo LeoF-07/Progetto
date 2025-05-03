@@ -6,6 +6,7 @@ import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class Connessione {
@@ -51,11 +52,15 @@ public class Connessione {
             throw new RuntimeException(e);
         }
 
-        esegui();
+        try {
+            esegui();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private void esegui(){
-        JSONObject partiComando;
+    private void esegui() throws IOException {
+        JSONObject partiComando = null;
         do {
             try {
                 serverSocket.receive(pktIn);
@@ -69,10 +74,19 @@ public class Connessione {
 
                 eseguiComando(comando, parametro);
             } catch (IOException e) {
-                System.out.println("È stata eseguita avvenuta la chiusura forzata del Server");
                 return;
-            } catch (JSONException e){
-                return;
+            } catch (DateTimeParseException e){
+                out = ("ERROR: Anno formattato male").getBytes();
+                pktOut = new DatagramPacket(out, out.length, clientSocket);
+                serverSocket.send(pktOut);
+            } catch (NumberFormatException e){
+                out = ("ERROR: Numero formattato male").getBytes();
+                pktOut = new DatagramPacket(out, out.length, clientSocket);
+                serverSocket.send(pktOut);
+            } catch (Exception e) {
+                out = ("ERROR: Eccezione").getBytes();
+                pktOut = new DatagramPacket(out, out.length, clientSocket);
+                serverSocket.send(pktOut);
             }
         } while(!partiComando.getString("comando").equals(Comando.END.nome));
 
@@ -143,11 +157,6 @@ public class Connessione {
                     out = (new JSONObject(monumenti.get(riga)).toString().getBytes());
                     pktOut = new DatagramPacket(out, out.length, clientSocket);
                     serverSocket.send(pktOut);
-                }catch (NumberFormatException ex){
-                    out = ("ERROR: Parametro formattato male").getBytes();
-                    pktOut = new DatagramPacket(out, out.length, clientSocket);
-                    serverSocket.send(pktOut);
-                    return;
                 }catch (IndexOutOfBoundsException ex){
                     out = ("ERROR: Non esiste la riga inserita").getBytes();
                     pktOut = new DatagramPacket(out, out.length, clientSocket);
@@ -275,7 +284,7 @@ public class Connessione {
                 }
                 break;
 
-            case GET_PER_ANNI:
+            case GET_TRA_ANNI:
                 String[] anni = parametro.split(";");
                 Year anno1 = Year.parse(anni[0]);
                 Year anno2 = Year.parse(anni[1]);
@@ -289,7 +298,7 @@ public class Connessione {
                     }
                 }
                 if(corrispondenzeTrovate == 0){
-                    out = (Comando.GET_PER_ANNI.errore).getBytes();
+                    out = (Comando.GET_TRA_ANNI.errore).getBytes();
                     pktOut = new DatagramPacket(out, out.length, clientSocket);
                     serverSocket.send(pktOut);
                     return;
