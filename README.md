@@ -11,7 +11,7 @@ Applicazione Client-Server per la consultazione da remoto di informazioni relati
 
 1. Clona la repository:
    ```sh
-   git clone https://github.com/tuo-username/tuo-repository.git
+   git clone https://github.com/LeoF-07/Progetto.git
 
 2. Apri i progetti del Server e del Client (dell'applicazione TCP o UDP) sull'ambiente di sviluppo.
 
