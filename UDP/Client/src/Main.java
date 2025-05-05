@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import org.json.JSONObject;
 
-
+/**
+ * Classe Main del Client UDP
+ * Avvia una connessione al Server e prevede i metodi per comunicare con esso
+ * @author Leonardo
+ */
 public class Main{
 
-    final static String nomeServer = "localhost";
     final static int portaServer = 1050;
 
     private static byte[] in;
@@ -22,6 +25,11 @@ public class Main{
 
     private static String[] attributiMonumento;
 
+    /**
+     * Metodo Main del Client UDP
+     * Avvia una connessione al Server
+     * @param args
+     */
     public static void main(String[] args) {
         System.out.println("Connessione al server in corso...");
         try (DatagramSocket sck = new DatagramSocket()) {
@@ -32,6 +40,11 @@ public class Main{
         }
     }
 
+    /**
+     * Metodo per la comunicazione con il Server
+     * Rende visibile anche la GUI
+     * @param sck Socket del Server
+     */
     private static void comunica(DatagramSocket sck) {
         serverSocket = sck;
 
@@ -107,6 +120,13 @@ public class Main{
         return risposte;
     }
 
+    /**
+     * Metodo che serializza il comando in un messaggio JSON e lo invia al Server
+     * @param comando Stringa contenente il comando
+     * @param parametro Stringa contenente il parametro (o i parametri) del comando
+     * @return Un ArrayList di Stringhe, ovvero delle risposte del Server
+     * @throws Exception
+     */
     public static ArrayList<String> serializzaEInviaAlServer(String comando, String parametro) throws Exception {
         JSONObject jsonComando = new JSONObject();
         jsonComando.put("comando", comando);

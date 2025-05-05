@@ -5,6 +5,7 @@ import java.util.ArrayList;
 /**
  * Classe Main del Server TCP
  * Accetta e gestisce le connessioni al Server TCP
+ * @author Leonardo
  */
 public class Main {
 

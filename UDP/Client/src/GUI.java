@@ -6,6 +6,10 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 
+/**
+ * Classe GUI del Client
+ * Implementa l'interfaccia grafica del Client
+ */
 public class GUI extends JFrame {
 
     private JPanel comandoEParametro;

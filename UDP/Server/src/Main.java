@@ -1,11 +1,10 @@
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
 
 /**
  * Classe Main del Server UDP
  * Accetta e gestisce le connessioni al Server UDP
+ * @author Leonardo
  */
 public class Main {
 
@@ -14,7 +13,6 @@ public class Main {
 
     /**
      * Metodo main del Server, crea un DatagramSocket e accetta le connessioni singole
-     * @author Leonardo
      * @param args
      * @throws IOException
      */

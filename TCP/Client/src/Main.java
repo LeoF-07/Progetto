@@ -9,6 +9,7 @@ import org.json.JSONObject;
 /**
  * Classe Main del Client TCP
  * Avvia una connessione al Server e prevede i metodi per comunicare con esso
+ * @author Leonardo
  */
 public class Main{
 
