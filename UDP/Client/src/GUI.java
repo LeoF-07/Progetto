@@ -80,16 +80,15 @@ public class GUI extends JFrame {
 
                 try {
                     risposte = Main.inviaComando((String) selectComandi.getSelectedItem(), parametro);
-                } catch(ServerChiusoException ex){
-                    System.out.println(ex.getMessage());
-                    JOptionPane.showMessageDialog(invia, ex.getMessage());
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException exc) {
-                        throw new RuntimeException(exc);
+                    if(risposte.isEmpty()) {
+                        JOptionPane.showMessageDialog(invia, "Il Server è stato chiuso o riavviato");
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException exc) {
+                            throw new RuntimeException(exc);
+                        }
+                        System.exit(0);
                     }
-                    System.exit(0);
-                    return;
                 } catch (Exception ex) {
                     System.out.println(ex.getMessage());
                     JOptionPane.showMessageDialog(invia, ex.getMessage());

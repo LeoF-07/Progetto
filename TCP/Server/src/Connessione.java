@@ -7,6 +7,10 @@ import java.time.Year;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
+/**
+ * Classe Connessione del Server
+ * Implementa una singola connessione al Server e prevede tutti i metodi per la comunicazione con il Client
+ */
 public class Connessione extends Thread {
 
     private final static String FINE_TRASMISSIONE = "FINE";
@@ -47,6 +51,10 @@ public class Connessione extends Thread {
         }
     }
 
+    /**
+     * Metodo che legge il messaggio in arrivo dal Client
+     * Separa il messaggio in "comando" e "parametro" e chiama il metodo per l'esecuzione del comando
+     */
     private void esegui(){
         JSONObject partiComando = null;
         do {
@@ -74,6 +82,12 @@ public class Connessione extends Thread {
         System.out.println("\nDigita STOP in qualsiasi momento per spegnere il Server\n");
     }
 
+    /**
+     * Metodo che esegue il comando e invia la risposta al Client
+     * @param nomeComando Stringa contenente il nome del comando
+     * @param parametro Stringa contenente il parametro (o i parametri) del comando
+     * @throws Exception
+     */
     public void eseguiComando(String nomeComando, String parametro) throws Exception {
         if(nomeComando.equals("GET")){
             String comandi = "";
@@ -337,8 +351,8 @@ public class Connessione extends Thread {
             while (bufferedReader.ready()){
                 String[] informazioni = bufferedReader.readLine().split(";");
                 Monumento monumento = new Monumento(informazioni[0], informazioni[1], informazioni[2], informazioni[3],
-                                                    informazioni[4], Year.parse(informazioni[5]), LocalDateTime.parse(informazioni[6].substring(0, informazioni[6].length() - 1)),
-                                                    informazioni[7], Double.parseDouble(informazioni[8]), Double.parseDouble(informazioni[9]));
+                        informazioni[4], Year.parse(informazioni[5]), LocalDateTime.parse(informazioni[6].substring(0, informazioni[6].length() - 1)),
+                        informazioni[7], Double.parseDouble(informazioni[8]), Double.parseDouble(informazioni[9]));
                 monumenti.add(monumento);
             }
         } catch (IOException e) {

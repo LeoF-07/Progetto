@@ -2,6 +2,10 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Classe Monumento
+ * Rappresenta un monumento con tutti i suoi attributi corrispondenti ai campi del file CSV
+ */
 public class Monumento {
 
     private String comune;
@@ -36,80 +40,40 @@ public class Monumento {
         return comune;
     }
 
-    public void setComune(String comune) {
-        this.comune = comune;
-    }
-
     public String getProvincia() {
         return provincia;
-    }
-
-    public void setProvincia(String provincia) {
-        this.provincia = provincia;
     }
 
     public String getRegione() {
         return regione;
     }
 
-    public void setRegione(String regione) {
-        this.regione = regione;
-    }
-
     public String getNome() {
         return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     public String getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
     public Year getAnnoInserimento() {
         return annoInserimento;
-    }
-
-    public void setAnnoInserimento(Year annoInserimento) {
-        this.annoInserimento = annoInserimento;
     }
 
     public LocalDateTime getDataEOraInserimento() {
         return dataEOraInserimento;
     }
 
-    public void setDataEOraInserimento(LocalDateTime dataEOraInserimento) {
-        this.dataEOraInserimento = dataEOraInserimento;
-    }
-
     public String getIdentificatoreOpenStreetMap() {
         return identificatoreOpenStreetMap;
-    }
-
-    public void setIdentificatoreOpenStreetMap(String identificatoreOpenStreetMap) {
-        this.identificatoreOpenStreetMap = identificatoreOpenStreetMap;
     }
 
     public double getLongitudine() {
         return longitudine;
     }
 
-    public void setLongitudine(double longitudine) {
-        this.longitudine = longitudine;
-    }
-
     public double getLatitudine() {
         return latitudine;
-    }
-
-    public void setLatitudine(double latitudine) {
-        this.latitudine = latitudine;
     }
 
     @Override

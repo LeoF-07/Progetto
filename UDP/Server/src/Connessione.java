@@ -1,4 +1,3 @@
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -9,6 +8,10 @@ import java.time.Year;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
+/**
+ * Classe Connessione del Server
+ * Implementa una singola connessione al Server e prevede tutti i metodi per la comunicazione con il Client
+ */
 public class Connessione {
 
     private final static String FINE_TRASMISSIONE = "FINE";
@@ -59,6 +62,10 @@ public class Connessione {
         }
     }
 
+    /**
+     * Metodo che legge il messaggio in arrivo dal Client
+     * Separa il messaggio in "comando" e "parametro" e chiama il metodo per l'esecuzione del comando
+     */
     private void esegui() throws IOException {
         JSONObject partiComando = null;
         do {
@@ -93,6 +100,12 @@ public class Connessione {
         System.out.println("\nDigita STOP in qualsiasi momento per spegnere il Server\n");
     }
 
+    /**
+     * Metodo che esegue il comando e invia la risposta al Client
+     * @param nomeComando Stringa conentente il nome del comando
+     * @param parametro Stringa contenente il parametro (o i parametri) del comando
+     * @throws IOException
+     */
     public void eseguiComando(String nomeComando, String parametro) throws IOException {
         if(nomeComando.equals("GET")){
             String comandi = "";
@@ -388,9 +401,6 @@ public class Connessione {
 
     public void chiudi(){ // Chiusura della connessione
         try {
-            out = FINE_TRASMISSIONE.getBytes();
-            pktOut = new DatagramPacket(out, out.length, clientSocket);
-            serverSocket.send(pktOut);
             out = FINE_TRASMISSIONE.getBytes();
             pktOut = new DatagramPacket(out, out.length, clientSocket);
             serverSocket.send(pktOut);

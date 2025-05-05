@@ -1,3 +1,6 @@
+/**
+ * Enum dei comandi messi a disposizione al Server
+ */
 public enum Comando {
 
     GET_ROW("GET_ROW", 1, "Ottieni il monumento nella riga scelta", ""),

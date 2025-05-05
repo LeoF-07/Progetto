@@ -3,13 +3,23 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
+/**
+ * Classe Main del Server UDP
+ * Accetta e gestisce le connessioni al Server UDP
+ */
 public class Main {
 
     public final static int PORT = 1050; // porta al di fuori del range 1-1024 !
-    public static Gestore gestore;
+    public static  Gestore gestore;
 
+    /**
+     * Metodo main del Server, crea un DatagramSocket e accetta le connessioni singole
+     * @author Leonardo
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
-        gestore = new Gestore();
+        gestore = new Gestore(); // Gestore generale del Server, ne consente lo spegimento forzato
         gestore.start();
 
         while(true){

@@ -72,6 +72,7 @@ public class Main{
         Scanner s = new Scanner(System.in, StandardCharsets.UTF_8);
 
         String[] partiComando;
+        ArrayList<String> risposte = null;
         do {
             System.out.print("\nComando: ");
             String comando = s.nextLine();
@@ -88,10 +89,11 @@ public class Main{
             }
 
             try {
-                serializzaEInviaAlServer(partiComando[0], partiComando[1]);
-            } catch (ServerChiusoException e){
-                System.out.println(e.getMessage());
-                System.exit(0);
+                risposte = serializzaEInviaAlServer(partiComando[0], partiComando[1]);
+                if(risposte.isEmpty()) {
+                    System.out.println("Il Server è stato chiuso o riavviato");
+                    System.exit(0);
+                }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -137,7 +139,7 @@ public class Main{
                 risposta = new String(pktIn.getData(), 0, pktIn.getLength(), StandardCharsets.UTF_8);
             }
         } catch (IOException e) {
-            throw new ServerChiusoException("Il Server è stato chiuso o riavviato");
+            System.out.println("IOException");
         }
 
         return risposte;

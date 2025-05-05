@@ -5,6 +5,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Classe Gestore del Server
+ * Gestisce il Server consentendone lo spegnimento forzato con la chiusura di tutte le connessioni
+ */
 public class Gestore extends Thread {
 
     private ArrayList<Connessione> connessioni;
