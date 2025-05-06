@@ -36,7 +36,7 @@ Il Server mette a disposizione funzionalità di ricerca. Riceve comandi dal Clie
 
 ## Autore
 
-Progetto sviluppato da Leonardo.
+Progetto e sviluppato da Leonardo.
 
 ## Licenza
 
