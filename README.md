@@ -1,6 +1,6 @@
 # Progetto
 
-Applicazione Client-Server per la consultazione da remoto di informazioni relative a Monumenti italiani
+Applicazione Client-Server per la consultazione da remoto di informazioni relative a Monumenti italiani.
 
 ## Requisiti
 
@@ -25,7 +25,7 @@ Applicazione Client-Server per la consultazione da remoto di informazioni relati
 Il Server dispone del file CSV contenente tutti i Monumenti italiani.  
 Il Client, munito di interfaccia grafica, comunica con il Server per consultare informazioni relative ai Monumenti.  
   
-Il protocollo di comunicazione Client-Server è descritto nel file Relazione.docx presente nella repository
+Il protocollo di comunicazione Client-Server è descritto nel file Relazione.pdf presente nella repository.
 
 * TCP: Il Server gestisce più connessioni utilizzando i sockets
 * UDP: Il Server gestisce una connessione alla volta
