@@ -106,11 +106,15 @@ public class GUI extends JFrame {
                 tabellaMonumenti = new JTable(data, attributiMonumento);
                 tabellaMonumenti.getTableHeader().setPreferredSize(new Dimension(0, 50));
                 tabellaMonumenti.getTableHeader().setBackground(Color.PINK);
+                tabellaMonumenti.getColumnModel().getColumn(3).setPreferredWidth(80);
+                tabellaMonumenti.getColumnModel().getColumn(5).setPreferredWidth(40);
+                tabellaMonumenti.getColumnModel().getColumn(2).setPreferredWidth(50);
+                tabellaMonumenti.getColumnModel().getColumn(0).setPreferredWidth(80);
 
                 scrollPaneTabella = new JScrollPane(tabellaMonumenti);
 
                 frameTabella = new JFrame("Risposta");
-                frameTabella.setSize(1800, 800);
+                frameTabella.setSize(1500, 800);
                 frameTabella.setLocationRelativeTo(null);
                 frameTabella.setVisible(true);
                 frameTabella.add(scrollPaneTabella);
