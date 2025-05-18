@@ -1,6 +1,8 @@
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import org.json.JSONObject;
@@ -151,7 +153,16 @@ public class Main{
                 JSONObject jsonMonumento = new JSONObject(risposta);
 
                 String monumento = "";
-                for (String attributo : attributiMonumento) monumento += jsonMonumento.get(attributo) + ";";
+                for (String attributo : attributiMonumento){
+                    if(attributo.contains("data")){
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy, HH:mm:ss");
+                        String data = (String) jsonMonumento.get(attributo);
+                        LocalDateTime d = LocalDateTime.parse(data);
+                        String dataFormattata = d.format(formatter);
+                        monumento += dataFormattata + ";";
+                    }
+                    else monumento += jsonMonumento.get(attributo) + ";";
+                }
                 System.out.format("Risposta dal server: Monumento: %s%n", jsonMonumento);
                 risposte.add(monumento);
 

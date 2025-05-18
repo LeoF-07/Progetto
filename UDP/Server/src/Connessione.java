@@ -178,6 +178,15 @@ public class Connessione {
                 }
                 break;
 
+            case GET_ALL:
+                for (Monumento monumento : monumenti){
+                    out = (new JSONObject(monumento)).toString().getBytes();
+                    pktOut = new DatagramPacket(out, out.length, clientSocket);
+                    serverSocket.send(pktOut);
+                    corrispondenzeTrovate++;
+                }
+                break;
+
             case GET_PER_COMUNE:
                 for (Monumento monumento : monumenti){
                     if(monumento.getComune().equalsIgnoreCase(parametro)) {

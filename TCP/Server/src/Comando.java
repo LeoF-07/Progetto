@@ -4,6 +4,7 @@
 public enum Comando {
 
     GET_ROW("GET_ROW", 1, "Ottieni il monumento nella riga scelta", ""),
+    GET_ALL("GET_ALL", 0, "Ottieni tutti i monumenti", ""),
     GET_PER_COMUNE ("GET_PER_COMUNE", 1, "Ottieni i monumenti in quel comune", "Non esiste nessun monumento in questo comune"),
     GET_PER_PROVINCIA ("GET_PER_PROVINCIA", 1, "Ottieni i monumenti in quella provincia", "Non esiste nessun monumento in questa provincia"),
     GET_PER_REGIONE ("GET_PER_REGIONE", 1, "Ottieni i monumenti in quella regione", "Non esiste nessun monumento in questa regione"),

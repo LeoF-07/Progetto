@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Server1:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Server1_jar</output-path>
+    <root id="archive" name="Server1.jar">
+      <element id="module-output" name="Server1" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/UDP/Client/json-20250107.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/TCP/Server/json-20250107.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/UDP/Server/json-20250107.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/TCP/Client/json-20250107.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

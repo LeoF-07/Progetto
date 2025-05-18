@@ -146,6 +146,13 @@ public class Connessione extends Thread {
                 }
                 break;
 
+            case GET_ALL:
+                for (Monumento monumento : monumenti){
+                    out.println(new JSONObject(monumento));
+                    corrispondenzeTrovate++;
+                }
+                break;
+
             case GET_PER_COMUNE:
                 for (Monumento monumento : monumenti){
                     if(monumento.getComune().equalsIgnoreCase(parametro)) {
