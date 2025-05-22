@@ -20,7 +20,7 @@ public class Connessione extends Thread {
     private BufferedReader in = null;
     private PrintWriter out = null;
 
-    private final String PATH = ".\\Mappa-dei-monumenti-in-Italia.csv";
+    private final String PATH = "Mappa-dei-monumenti-in-Italia.csv";
     private File file;
     private ArrayList<Monumento> monumenti;
 

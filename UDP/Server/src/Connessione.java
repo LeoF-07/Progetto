@@ -24,7 +24,7 @@ public class Connessione {
     private byte[] in;
     private byte[] out;
 
-    private final String PATH = ".\\Mappa-dei-monumenti-in-Italia.csv";
+    private final String PATH = "Mappa-dei-monumenti-in-Italia.csv";
     private File file;
     private ArrayList<Monumento> monumenti;
 
