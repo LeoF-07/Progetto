@@ -1,7 +1,3 @@
 out/
-TCP/out/
-UDP/out/
 !TCP/Server/out
-TCP/Client/out
 !UDP/Server/out
-UDP/Client/out
