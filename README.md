@@ -11,6 +11,7 @@ Applicazione Client-Server per la consultazione da remoto di informazioni relati
 
 * DockerDesktop
 * Sistema operativo Linux, o WSL se si usa Windows
+* Abilitare tutte le impostazioni di WSL integration su Docker Desktop: Settings > Resources > WSL integration (può essere necessario il *Refetch distros* ad ogni avvio del dispositivo)
 
 ## Installazione
 
