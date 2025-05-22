@@ -4,7 +4,7 @@ Applicazione Client-Server per la consultazione da remoto di informazioni relati
 
 ## Requisiti
 
-* L'ambiente di sviluppo integrato **IntelliJ IDEA**, con JDK 22
+* L'ambiente di sviluppo integrato **IntelliJ IDEA**, con JDK 23
 * Una console per eseguire i comandi
 
 ## Requisiti facoltativi
@@ -41,16 +41,21 @@ Il Server mette a disposizione funzionalità di ricerca. Riceve comandi dal Clie
 
 ## Container Docker con il Server
 
-Eventualmente è possibile utilizzare un container per ospitare il Server TCP. Si vedano i **requisiti facoltativi**.  
-1. Poiché il server è munito di interfaccia grafica è necessario installare i pacchetti X11 essenziali per il funzionamento del server grafico X11 nell'ambiente WSLg o nel sistema Linux:
+Eventualmente è possibile utilizzare dei container per ospitare i Server TCP e UDP. Si vedano i **requisiti facoltativi**.  
+1. Poiché i server sono muniti di interfaccia grafica è necessario installare i pacchetti X11 essenziali per il funzionamento del server grafico X11 nell'ambiente WSLg o nel sistema Linux:
    ```sh
    sudo apt update && sudo apt install -y x11-apps
    ```  
    <br>
 2. Su Docker Hub è pubblicata l'immagine del container che ospita il Server TCP: https://hub.docker.com/repository/docker/leof07/server-tcp/general  
-   Per avviare il container è necessario eseguire il seguente comando:
+   e l'immagine del container che ospita il Server UDP: https://hub.docker.com/repository/docker/leof07/server-udp/general  
+   Per avviare il container del Server TCP è necessario eseguire il seguente comando:
    ```sh
    docker run -p 1050:1050 -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --name serverTCP leof07/server-tcp
+   ```
+   Per avviare il container del Server UDP è necessario eseguire il seguente comando:
+   ```sh
+   docker run -p 1050:1050 -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --name serverUDP leof07/server-udp
    ```
    <br>
 
@@ -70,13 +75,13 @@ Eventualmente è possibile utilizzare un container per ospitare il Server TCP. S
       ```
       <br>
 
-4. In seguito il container può essere avviato comodamente con:
+4. In seguito il container può essere avviato comodamente con (sostituire `<nome-container>` con serverTCP o con serverUDP in base all'esigenza):
    ```sh
-   docker start serverTCP
+   docker start <nome-container>
    ```
    oppure con:
    ```sh
-   docker start -a serverTCP
+   docker start -a <nome-container>
    ```
 
 ## Autore
